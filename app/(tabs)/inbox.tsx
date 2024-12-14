@@ -11,11 +11,56 @@ import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import CommonHeader from "../components/reusableComponents/CommonHeader";
 
 export default function Inbox() {
-  const [activeButton, setActiveButton] = useState('buttonAll');
+  const [activeButton, setActiveButton] = useState("buttonAll");
+  const [searchText, setSearchText] = useState("");
 
   const handleActiButton = (button: any) => {
     setActiveButton(button);
   };
+
+  const handleSearch = (text: any) => {
+    setSearchText(text);
+  };
+
+  // Fake Message Data
+  const fakeMessageData = [
+    {
+      name: "Iftekhar Ahmed",
+      message:
+        "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
+      time: "18:35",
+      date: "14/12/2024",
+      imageUrl: "https://i.ibb.co.com/9WM4Bz6/person.jpg",
+      unread: 2,
+    },
+    {
+      name: "Hasanul Alam",
+      message:
+        "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
+      time: "18:35",
+      date: "14/12/2024",
+      imageUrl: null,
+      unread: 0,
+    },
+    {
+      name: "Nishat Molla",
+      message:
+        "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
+      time: "18:35",
+      date: "14/12/2024",
+      imageUrl: null,
+      unread: 0,
+    },
+    {
+      name: "Kalam Chowdhury",
+      message:
+        "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
+      time: "18:35",
+      date: "14/12/2024",
+      imageUrl: null,
+      unread: 12,
+    },
+  ];
   return (
     <View className="flex-1 bg-white pb-4 pt-0">
       <ScrollView>
@@ -28,6 +73,8 @@ export default function Inbox() {
               className="w-full"
               multiline={true}
               placeholder="Search..."
+              value={searchText}
+              onChangeText={handleSearch}
             />
           </View>
           {/* Filter Buttons */}
@@ -58,12 +105,16 @@ export default function Inbox() {
             >
               <View
                 className={`${
-                  activeButton === "buttonUnread" ? "bg-[#6a30ff]" : "bg-[#f2f2f2]"
+                  activeButton === "buttonUnread"
+                    ? "bg-[#6a30ff]"
+                    : "bg-[#f2f2f2]"
                 } px-4 py-[5px] rounded border border-[#e6e6e6] mt-5`}
               >
                 <Text
                   className={`${
-                    activeButton === "buttonUnread" ? "text-white" : "text-black"
+                    activeButton === "buttonUnread"
+                      ? "text-white"
+                      : "text-black"
                   }`}
                 >
                   Unread
@@ -71,9 +122,11 @@ export default function Inbox() {
               </View>
             </TouchableOpacity>
           </View>
+
           {/* Messages */}
-          <View className="message-container mt-4">
-            <View className="flex-row gap-3 items-center justify-between mt-4">
+          <View className="message-container mt-4 w-full">
+            {fakeMessageData.map((message) => (
+              <View key={message.name} className="flex-row gap-3 items-center justify-between mt-4">
               <View className="flex-row items-center gap-3">
                 {/* Inbox person image */}
                 <View className="w-[50px] h-[50px] rounded-full overflow-hidden">
@@ -85,9 +138,9 @@ export default function Inbox() {
                 </View>
                 {/* Inbox text */}
                 <View>
-                  <Text className="text-lg font-semibold">Iftekhar Ahmed</Text>
+                  <Text className="text-lg font-semibold">{message.name}</Text>
                   <Text className="text font-semibold -mt-1">
-                    How are you today? I am fine and.....
+                    {message.message.length > 40 ? message.message.slice(0, 30) + '....' : message.message}
                   </Text>
                 </View>
               </View>
@@ -104,6 +157,40 @@ export default function Inbox() {
                 </View>
               </View>
             </View>
+            ))}
+            {/* Single Message */}
+            <View className="flex-row gap-3 items-center justify-between mt-4">
+              <View className="flex-row items-center gap-3">
+                {/* Inbox person image */}
+                <View className="w-[50px] h-[50px] rounded-full overflow-hidden">
+                  <Image
+                    source={require("../../assets/images/person.jpeg")}
+                    resizeMode="cover"
+                    className="w-full h-full"
+                  />
+                </View>
+                {/* Inbox text */}
+                <View>
+                  <Text className="text-lg font-semibold">Iftekhar Ahmed</Text>
+                  <Text className="text font-semibold -mt-1">
+                    How are you today? I am fine.....
+                  </Text>
+                </View>
+              </View>
+              {/* Message time & Pin option */}
+              <View>
+                <Text className="text-sm">Today 4:35 pm</Text>
+                <View className="flex-row justify-end">
+                  {/* <SimpleLineIcons name="pin" size={14} color={"#bbbfc4"} /> */}
+                  <View className="bg-[#009fff] w-[18px] h-[18px] flex-row items-center rounded-full">
+                    <Text className="w-full text-center text-sm text-white font-semibold">
+                      2
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            {/* Single Message */}
             <View className="flex-row gap-3 items-center justify-between mt-4">
               <View className="flex-row items-center gap-3">
                 {/* Inbox person image */}

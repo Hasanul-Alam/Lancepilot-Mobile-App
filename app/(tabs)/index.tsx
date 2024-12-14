@@ -1,4 +1,10 @@
-import { Dimensions, ScrollView, Text, View } from "react-native";
+import {
+  Dimensions,
+  ListRenderItemInfo,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import ProgressBar from "@/app/components/reusableComponents/progressBar";
 import {
   EvilIcons,
@@ -55,7 +61,7 @@ export default function HomeScreen() {
     title: string;
     description: string;
   };
-  const renderItem: React.FC<{ item: CardItem }> = ({ item, index }) => (
+  const renderItem = ({ item, index }: ListRenderItemInfo<CardItem>) => (
     <View
       key={item.id}
       className="w-[145px] h-[65px] shadow-lg me-3 bg-black rounded-2xl opacity-85"

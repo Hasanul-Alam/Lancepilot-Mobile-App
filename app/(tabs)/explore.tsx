@@ -51,14 +51,14 @@ export default function TabTwoScreen() {
                 name="eye-off"
                 size={18}
                 color="gray"
-                className="bg-red-600"
+                className=""
               />
             ) : (
               <Feather
                 name="eye"
                 size={18}
                 color="gray"
-                className="bg-red-600"
+                className=""
               />
             )}
           </Text>
