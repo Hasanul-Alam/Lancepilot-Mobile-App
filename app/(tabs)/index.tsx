@@ -122,7 +122,7 @@ export default function HomeScreen() {
                 </View>
               </View>
               <View className="w-[90%] mx-auto mt-2">
-                <ProgressBar progress={45} />
+                <ProgressBar color="bg-[#00BF63]" progress={45} />
               </View>
             </View>
           </View>
@@ -185,23 +185,23 @@ export default function HomeScreen() {
                 </View>
                 <View className="mt-6">
                   <Text className="text-white text-lg">Sent</Text>
-                  <ProgressBar progress={30} />
+                  <ProgressBar color="bg-[#009fff]" progress={30} />
                 </View>
                 <View className="mt-6">
                   <Text className="text-white text-lg">Delivered</Text>
-                  <ProgressBar progress={45} />
+                  <ProgressBar color="bg-[#10b981]" progress={45} />
                 </View>
                 <View className="mt-6">
                   <Text className="text-white text-lg">Read</Text>
-                  <ProgressBar progress={20} />
+                  <ProgressBar color="bg-[#14b8a6]" progress={20} />
                 </View>
                 <View className="mt-6">
                   <Text className="text-white text-lg">Respond</Text>
-                  <ProgressBar progress={15} />
+                  <ProgressBar color="bg-[#6366f1]" progress={15} />
                 </View>
                 <View className="mt-6">
                   <Text className="text-white text-lg">Failed</Text>
-                  <ProgressBar progress={10} />
+                  <ProgressBar color="bg-[#f43f5e]" progress={10} />
                 </View>
               </View>
             </View>
