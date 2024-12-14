@@ -1,6 +1,13 @@
 import { Dimensions, ScrollView, Text, View } from "react-native";
 import ProgressBar from "@/app/components/reusableComponents/progressBar";
-import { EvilIcons, Feather, Ionicons } from "@expo/vector-icons";
+import {
+  EvilIcons,
+  Feather,
+  FontAwesome,
+  Ionicons,
+  MaterialCommunityIcons,
+  Octicons,
+} from "@expo/vector-icons";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { LineChart } from "react-native-chart-kit";
 import CommonHeader from "../components/reusableComponents/CommonHeader";
@@ -13,6 +20,33 @@ const data = [
   { id: "5", title: "Workspaces", description: "Description for item 5" },
   { id: "6", title: "Campaigns", description: "Description for item 5" },
   { id: "7", title: "Quick Replies", description: "Description for item 5" },
+  { id: "8", title: "Message Limit", description: "Description for item 5" },
+];
+
+const icons = [
+  <Feather name="users" size={18} color="white" className="" />,
+  <Octicons name="comment-discussion" size={20} color="white" />,
+  <MaterialCommunityIcons
+    name="square-rounded-outline"
+    size={22}
+    color={"white"}
+  />,
+  <Feather name="users" size={18} color="white" className="" />,
+  <Ionicons name="cube-outline" size={23} color={"white"} />,
+  <MaterialCommunityIcons name="factory" size={18} color={"white"} />,
+  <MaterialCommunityIcons name="reply-outline" size={25} color={"white"} />,
+  <MaterialCommunityIcons name="database-outline" size={23} color={"white"} />,
+];
+
+const backgroundColors = [
+  "#8b5cf6",
+  "#14b8a6",
+  "#009fff",
+  "#8b5cf6",
+  "#6a30ff",
+  "#f97316",
+  "#f59e0b",
+  "#6a30ff",
 ];
 
 export default function HomeScreen() {
@@ -21,7 +55,7 @@ export default function HomeScreen() {
     title: string;
     description: string;
   };
-  const renderItem: React.FC<{ item: CardItem }> = ({ item }) => (
+  const renderItem: React.FC<{ item: CardItem }> = ({ item, index }) => (
     <View
       key={item.id}
       className="w-[145px] h-[65px] shadow-lg me-3 bg-black rounded-2xl opacity-85"
@@ -31,13 +65,13 @@ export default function HomeScreen() {
           <Text className="text-xl text-white text-semibold">{item.title}</Text>
           <Text className="text-xl text-white text-semibold">47</Text>
         </View>
-        <View className="size-[30] rounded-full bg-indigo-600 flex justify-center items-center">
-          <Feather
-            name="users"
-            size={18}
-            color="white"
-            className=""
-          />
+        <View
+          style={{
+            backgroundColor: backgroundColors[index % backgroundColors.length],
+          }}
+          className={`size-[30] rounded-full flex justify-center items-center`}
+        >
+          {icons[index % icons.length]}
         </View>
       </View>
     </View>

@@ -108,7 +108,6 @@ export default function CommonHeader() {
       <Modal
         transparent={true}
         visible={menuVisible}
-        animationType="fade"
         onRequestClose={toggleMenu}
       >
         <TouchableOpacity
@@ -151,7 +150,6 @@ export default function CommonHeader() {
       <Modal
         transparent={true}
         visible={settingsVisible}
-        animationType="fade"
         onRequestClose={toggleSettings}
       >
         <TouchableOpacity
