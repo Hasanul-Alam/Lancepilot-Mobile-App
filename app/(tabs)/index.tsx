@@ -64,7 +64,8 @@ export default function HomeScreen() {
   const renderItem = ({ item, index }: ListRenderItemInfo<CardItem>) => (
     <View
       key={item.id}
-      className="w-[145px] h-[65px] shadow-lg me-3 bg-black rounded-2xl opacity-85"
+      className={`h-[65px] shadow-lg me-3 bg-black rounded-2xl opacity-85`}
+      style= {{ width: cardWidth }}
     >
       <View className="flex-row justify-between w-[85%] mx-auto my-2">
         <View>
@@ -75,7 +76,7 @@ export default function HomeScreen() {
           style={{
             backgroundColor: backgroundColors[index % backgroundColors.length],
           }}
-          className={`size-[30] rounded-full flex justify-center items-center`}
+          className={`size-[30] rounded-full flex justify-center items-center ms-2`}
         >
           {icons[index % icons.length]}
         </View>
@@ -97,6 +98,7 @@ export default function HomeScreen() {
   ];
 
   const screenWidth = Dimensions.get("window").width;
+  const cardWidth = screenWidth * 0.42;
 
   const chartData = {
     labels: salesData.map((data) => data.month), // Extract months

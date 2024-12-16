@@ -75,11 +75,30 @@ export default function TabLayout() {
         <Tabs.Screen
           name="inbox"
           options={{
+            headerShown: false,
             title: "",
             tabBarIcon: ({ focused }) => (
               <View className="flex justify-center items-center">
                 <MaterialCommunityIcons
                   name="comment-processing-outline"
+                  size={28}
+                  color={focused ? "#4F46E5" : "#9CA3AF"}
+                />
+              </View>
+            ),
+          }}
+        />
+
+        {/* Notification */}
+        <Tabs.Screen
+          name="notification"
+          options={{
+            headerShown: false,
+            title: "",
+            tabBarIcon: ({ focused }) => (
+              <View className="flex justify-center items-center">
+                <MaterialCommunityIcons
+                  name="bell-ring-outline"
                   size={28}
                   color={focused ? "#4F46E5" : "#9CA3AF"}
                 />
