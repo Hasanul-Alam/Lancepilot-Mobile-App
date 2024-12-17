@@ -17,6 +17,7 @@ import {
   AntDesign,
   Entypo,
   EvilIcons,
+  Feather,
   FontAwesome,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
@@ -48,27 +49,27 @@ export default function App() {
       >
         {/* Dynamic icon logic */}
         {routeName === "title1" && (
-          <MaterialCommunityIcons
-            name={routeName === selectedTab ? "view-dashboard" : "view-dashboard-outline"}
-            size={25}
+          <Feather
+            name={routeName === selectedTab ? "home" : "home"}
+            size={23}
             color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
           />
         )}
         {routeName === "title2" && (
-          <MaterialCommunityIcons
+          <AntDesign
             name={
               routeName === selectedTab
-                ? "comment-processing"
-                : "comment-processing-outline"
+                ? "message1"
+                : "message1"
             }
-            size={25}
+            size={23}
             color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
           />
         )}
         {routeName === "title3" && (
-          <FontAwesome
-            name={routeName === selectedTab ? "user-circle" : "user-circle-o"}
-            size={22}
+          <MaterialCommunityIcons
+            name={routeName === selectedTab ? "face-man-profile" : "face-man-profile"}
+            size={28}
             color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
           />
         )}
@@ -195,9 +196,9 @@ const styles = StyleSheet.create({
       width: 2,
       height: 1,
     },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.5,
     shadowRadius: 1.41,
-    elevation: 1,
+    elevation: 0,
   },
   btnCircleUp: {
     width: 60,

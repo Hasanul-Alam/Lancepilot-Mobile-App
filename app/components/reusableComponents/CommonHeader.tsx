@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import {
   View,
   Text,
-  ScrollView,
   Image,
   TouchableOpacity,
   Button,
@@ -51,9 +50,9 @@ export default function CommonHeader() {
   });
 
   return (
-    <ScrollView className="w-full mx-auto">
+    <View className="w-full mx-auto">
       <View
-        className="w-full h-[100px] border-b border-b-[#c5d1c5] rounded-b-2xl bg-[#fff] mb-5 shadow-b"
+        className="w-full h-[100px] border-b border-b-[#c5d1c5] rounded-b-2xl bg-[#fff] shadow-b"
         style={{
           shadowColor: "#000", // Shadow color (iOS)
           shadowOffset: { width: 0, height: 2 }, // Shadow offset (iOS)
@@ -187,6 +186,6 @@ export default function CommonHeader() {
           </View>
         </TouchableOpacity>
       </Modal>
-    </ScrollView>
+    </View>
   );
 }
