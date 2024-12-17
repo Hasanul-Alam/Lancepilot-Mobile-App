@@ -165,7 +165,7 @@ export default function App() {
               <TouchableOpacity
                 onPress={handleTitle4Click} // Handle click to show popup
               >
-                <Ionicons name="menu" color="white" size={25} />
+                <Ionicons name="menu" color="#000000" size={25} />
               </TouchableOpacity>
             ),
           }}
@@ -193,11 +193,17 @@ export default function App() {
           </View>
         </View>
       </Modal>
-      <View className="absolute bottom-0 left-[20rem] p-5">
+      <TouchableOpacity
+        onPress={toggleSidebar}
+        className="absolute bottom-0 left-[20rem] py-5 px-8"
+      >
+        <Entypo name="menu" size={28} color="green" />
+      </TouchableOpacity>
+      {/* <View className="absolute bottom-0 left-[20rem] p-5">
         <TouchableOpacity onPress={toggleSidebar}>
           <Entypo name="menu" size={28} color="green" />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Sidebar Menu */}
       {isSidebarVisible && (

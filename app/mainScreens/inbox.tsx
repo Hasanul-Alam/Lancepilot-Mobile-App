@@ -44,42 +44,6 @@ export default function Inbox() {
       unread: 0,
     },
     {
-      name: "Nishat Molla",
-      message:
-        "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
-      time: "18:35",
-      date: "14/12/2024",
-      imageUrl: null,
-      unread: 0,
-    },
-    {
-      name: "Nishat Molla",
-      message:
-        "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
-      time: "18:35",
-      date: "14/12/2024",
-      imageUrl: null,
-      unread: 0,
-    },
-    {
-      name: "Nishat Molla",
-      message:
-        "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
-      time: "18:35",
-      date: "14/12/2024",
-      imageUrl: null,
-      unread: 0,
-    },
-    {
-      name: "Nishat Molla",
-      message:
-        "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
-      time: "18:35",
-      date: "14/12/2024",
-      imageUrl: null,
-      unread: 0,
-    },
-    {
       name: "Kalam Chowdhury",
       message:
         "How are you today? What is your plan aobut our nex project? I think you are ready and excited about it.",
