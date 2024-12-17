@@ -1,244 +1,247 @@
-import { Tabs } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
   Animated,
-  TouchableOpacity,
-  Text,
-  View,
-  Dimensions,
+  Modal,
   StyleSheet,
-  Image,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { CurvedBottomBarExpo } from "react-native-curved-bottom-bar";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import IndexScreen from "./index";
+import Inbox from "./inbox";
+import Profile from "./profile";
 import {
   AntDesign,
-  MaterialCommunityIcons,
   Entypo,
-  Feather,
   EvilIcons,
-  Ionicons,
+  FontAwesome,
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
-const { width, height } = Dimensions.get("window");
+// Define types for route names
+type RouteName = "title1" | "title2" | "title3" | "title4";
 
-export default function TabLayout() {
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const slideAnim = useState(new Animated.Value(-width))[0];
+// Props for the tab bar
+interface TabBarProps {
+  routeName: RouteName;
+  selectedTab: RouteName;
+  navigate: (name: RouteName) => void;
+}
 
-  // Sidebar Menu toggler
-  const toggleSidebar = () => {
-    if (isSidebarVisible) {
-      // Close Sidebar
-      Animated.timing(slideAnim, {
-        toValue: -width,
-        duration: 300,
-        useNativeDriver: false,
-      }).start(() => setSidebarVisible(false));
-    } else {
-      // Open Sidebar
-      setSidebarVisible(true);
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    }
+export default function App() {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleTitle4Click = () => {
+    // Trigger the popup/modal when title4 is clicked
+    setModalVisible(true);
   };
+
+  // Function to render the tab bar
+  const renderTabBar = ({ routeName, selectedTab, navigate }: TabBarProps) => {
+    return (
+      <TouchableOpacity
+        onPress={() => navigate(routeName)}
+        style={styles.tabbarItem}
+      >
+        {/* Dynamic icon logic */}
+        {routeName === "title1" && (
+          <MaterialCommunityIcons
+            name={routeName === selectedTab ? "view-dashboard" : "view-dashboard-outline"}
+            size={25}
+            color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
+          />
+        )}
+        {routeName === "title2" && (
+          <MaterialCommunityIcons
+            name={
+              routeName === selectedTab
+                ? "comment-processing"
+                : "comment-processing-outline"
+            }
+            size={25}
+            color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
+          />
+        )}
+        {routeName === "title3" && (
+          <FontAwesome
+            name={routeName === selectedTab ? "user-circle" : "user-circle-o"}
+            size={22}
+            color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
+          />
+        )}
+        {routeName === "title4" && (
+          <Entypo
+            name={routeName === selectedTab ? "menu" : "menu"}
+            size={28}
+            color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
+          />
+        )}
+      </TouchableOpacity>
+    );
+  };
+  
 
   return (
     <>
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: "#4F46E5",
-          tabBarInactiveTintColor: "#9CA3AF",
-          headerShown: false,
-          tabBarStyle: styles.tabBar,
-        }}
+      {/* Curved Bottom Bar Navigator */}
+      <CurvedBottomBarExpo.Navigator
+        type="DOWN"
+        style={styles.bottomBar}
+        shadowStyle={styles.shadow}
+        height={65}
+        circleWidth={60}
+        bgColor="white"
+        initialRouteName="title1"
+        borderTopLeftRight
+        renderCircle={() => (
+          <Animated.View style={styles.btnCircleUp}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => Alert.alert("Click Action")}
+            >
+              <AntDesign name="plus" size={32} color="#1a9e4b" />
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+        tabBar={renderTabBar}
       >
-        {/* Dashboard */}
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <View className="flex justify-center items-center">
-                <AntDesign
-                  size={26}
-                  name="appstore-o"
-                  color={focused ? "#4F46E5" : "#9CA3AF"}
-                />
-              </View>
-            ),
-          }}
+        <CurvedBottomBarExpo.Screen
+          name="title1"
+          position="LEFT"
+          component={IndexScreen}
+          options={{ headerShown: false }}
         />
-
-        {/* Inbox */}
-        <Tabs.Screen
-          name="inbox"
-          options={{
-            headerShown: false,
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <View className="flex justify-center items-center">
-                <MaterialCommunityIcons
-                  name="comment-processing-outline"
-                  size={28}
-                  color={focused ? "#4F46E5" : "#9CA3AF"}
-                />
-              </View>
-            ),
-          }}
+        <CurvedBottomBarExpo.Screen
+          name="title2"
+          position="LEFT"
+          component={Inbox}
+          options={{ headerShown: false }}
         />
-
-        {/* Notification */}
-        <Tabs.Screen
-          name="notification"
+        <CurvedBottomBarExpo.Screen
+          name="title3"
+          position="RIGHT"
+          component={Profile}
+          options={{ headerShown: false }}
+          style={{  }}
+        />
+        {/* Action Button with Burger Icon (title4) */}
+        <CurvedBottomBarExpo.Screen
+          name="title4"
+          position="RIGHT"
+          component={() => null} // No content for this screen, only the button
           options={{
             headerShown: false,
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <View className="flex justify-center items-center">
-                <MaterialCommunityIcons
-                  name="bell-ring-outline"
-                  size={28}
-                  color={focused ? "#4F46E5" : "#9CA3AF"}
-                />
-              </View>
+            tabBarIcon: () => <Ionicons name="menu" color="gray" size={30} />,
+            tabBarButton: () => (
+              <TouchableOpacity
+                onPress={handleTitle4Click} // Handle click to show popup
+              >
+                <Ionicons name="menu" color="white" size={25} />
+              </TouchableOpacity>
             ),
           }}
         />
+      </CurvedBottomBarExpo.Navigator>
 
-        {/* Action Button */}
-        <Tabs.Screen
-          name="action"
-          options={{
-            tabBarLabel: "",
-            tabBarIcon: () => (
-              <View className="absolute -top-10">
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  className="w-16 h-16 bg-green-500 rounded-full justify-center items-center shadow-lg"
-                  onPress={() => alert("Action button pressed!")}
-                >
-                  <AntDesign name="plus" size={32} color="white" />
-                </TouchableOpacity>
-              </View>
-            ),
-          }}
-        />
-
-        {/* Burger Menu */}
-        <Tabs.Screen
-          name="burgerMenu"
-          options={{
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <Entypo
-                name="menu"
-                size={28}
-                color={focused ? "#4F46E5" : "#9CA3AF"}
-              />
-            ),
-          }}
-          listeners={{
-            tabPress: (e) => {
-              e.preventDefault(); // Prevent tab navigation
-              toggleSidebar(); // Open/Close the sidebar
-            },
-          }}
-        />
-      </Tabs>
-
-      {/* Sidebar Menu */}
-      {isSidebarVisible && (
-        <Animated.View
-          style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}
-          className="bg-white"
-        >
-          <View className="mt-10">
-            {/* Close Button */}
-            <View className="flex-row items-center mt-5 justify-between">
-              {/* Logo */}
-              <View className="w-[40px] h-[30px] rounded-full overflow-hidden">
-                <Image
-                  source={require("../../assets/images/logo.png")}
-                  resizeMode="cover"
-                  className="w-full h-full"
-                />
-              </View>
-              <View className="w-[25px] h-[25px] bg-red-500 rounded-full flex-row items-center justify-center">
-                <TouchableOpacity
-                  onPress={toggleSidebar} // Close the sidebar
-                  className=" w-full"
-                >
-                  <Text className="text-white font-bold w-full text-center">
-                    X
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View className="mt-7">
-              <TouchableOpacity
-                className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
-                onPress={() => alert("Menu Item 1 clicked")}
-              >
-                <View>
-                  <MaterialCommunityIcons
-                    name="view-dashboard-outline"
-                    size={20}
-                  />
-                </View>
-                <Text className="text-black text-xl">Dashboard</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className=" mt-4 rounded-lg  flex-row items-center py-2 px-3 gap-3"
-                onPress={() => alert("Menu Item 1 clicked")}
-              >
-                <View className="-mt-[4px]">
-                  <EvilIcons name="envelope" size={25} />
-                </View>
-                <Text className="text-black text-xl">Inbox</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
-                onPress={() => alert("Menu Item 1 clicked")}
-              >
-                <View>
-                  <Ionicons name="chatbubbles-outline" size={20} />
-                </View>
-                <Text className="text-black text-xl">Live Chat</Text>
-              </TouchableOpacity>
-            </View>
+      {/* Popup Modal outside the Navigator */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Ionicons
+              name="close"
+              size={30}
+              color="black"
+              onPress={() => setModalVisible(false)}
+            />
+            <Text>Popup Content</Text>
+            <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <Text>Close</Text>
+            </TouchableOpacity>
           </View>
-        </Animated.View>
-      )}
+        </View>
+      </Modal>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  tabBar: {
-    height: 50,
-    backgroundColor: "#F9FAFB",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 10,
-  },
-  sidebar: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: width * 0.7, // Sidebar width should be 75% of the screen
-    // backgroundColor: "#fff", // Purple background
+  container: {
+    flex: 1,
     padding: 20,
-    zIndex: 10, // Ensure it stays above other content
+  },
+  shadow: {
+    shadowColor: "#000000", // Black shadow color
+    shadowOffset: {
+      width: 15, // Horizontal offset
+      height: 20, // Vertical offset (increased for a more pronounced shadow)
+    },
+    shadowOpacity: 0.3, // Increased opacity for a stronger shadow
+    shadowRadius: 10, // Increased radius for a blurrier, more pronounced shadow
+  },
+  button: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  bottomBar: {
     shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
-    elevation: 5,
+    shadowOffset: {
+      width: 2,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 1,
+  },
+  btnCircleUp: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ffffff",
+    bottom: 30,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 1,
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: 250,
+    height: 150,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    padding: 20,
+  },
+  tabbarItem: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  screen1: {
+    flex: 1,
+    backgroundColor: "#BFEFFF",
+  },
+  screen2: {
+    flex: 1,
+    backgroundColor: "#FFEBCD",
   },
 });

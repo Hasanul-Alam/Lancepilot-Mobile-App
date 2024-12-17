@@ -20,8 +20,8 @@ import {
 
 export default function ProfileScreen() {
   return (
-    <View className="flex-1 pb-4 pt-14 bg-[#f7f9fb]">
-      <ScrollView className="" showsVerticalScrollIndicator={true}>
+    <View className="flex-1 pt-14 pb-8">
+      <ScrollView className="pb-16" showsVerticalScrollIndicator={false}>
         {/* Profile Section */}
         <View className="w-[90%] mx-auto items-center">
           {/* Profile Image */}
@@ -52,9 +52,6 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* Horizontal Line */}
-        {/* <View className="bg-black w-full h-[1px] my-10 opacity-30" /> */}
-
         {/* Profile Bottom Section */}
         <View className="w-[90%] mx-auto mt-10">
           {/* Contact Groups */}
@@ -67,7 +64,7 @@ export default function ProfileScreen() {
           </View>
 
           {/* Input Field */}
-          <View className="w-full border border-1 border-[#e5e7eb] rounded-lg mt-3">
+          <View className="w-full border border-1 border-[#b3b5b9] rounded-lg mt-3">
             <TextInput
               placeholder="Write Something"
               className="px-3 text-white"
@@ -80,15 +77,17 @@ export default function ProfileScreen() {
             <FontAwesome name="tags" size={25} color="#333333" />
             <Text>No Tags Found</Text>
           </View>
+
           {/* Add a tag section */}
-          <View className="border rounded-lg border-[#e5e7eb]">
+          <View className="border rounded-lg border-[#b3b5b9]">
             <TextInput placeholder="Add a tag" className="px-3" />
           </View>
+
           {/* Notes */}
           <View>
             <Text className="mb-3 mt-4">Notes-1</Text>
             {/* Notes List */}
-            <View className="border border-1 border-[#e5e7eb] border-1 px-3 py-5 rounded-2xl w-full overflow-auto">
+            <View className="border border-1 border-[#b3b5b9] border-1 px-3 py-5 rounded-2xl w-full">
               <View className=" flex-row items-center">
                 {/* User Image */}
                 <View className="w-[40px] h-[40px] rounded-full overflow-hidden">
@@ -121,15 +120,15 @@ export default function ProfileScreen() {
               <View className="flex-row justify-between items-center mt-1">
                 {/* Copy & Edit Icons */}
                 <View className="mt-3 flex-row items-center gap-2">
-                  <View className="p-2 border border-1 border-[#e5e7eb] rounded-full">
+                  <View className="p-2 border border-1 border-[#b3b5b9] rounded-full">
                     <Feather name="copy" color={"#5c5c8a"} size={12} />
                   </View>
-                  <View className="p-2 border border-1 border-[#e5e7eb] rounded-full">
+                  <View className="p-2 border border-1 border-[#b3b5b9] rounded-full">
                     <Octicons name="pencil" color={"#5c5c8a"} size={12} />
                   </View>
                 </View>
                 {/* Delete Icon */}
-                <View className="w-[25px] h-[25px] border border-[#e5e7eb] rounded-full relative mt-2">
+                <View className="w-[25px] h-[25px] border border-[#b3b5b9] rounded-full relative mt-2">
                   <EvilIcons
                     name="trash"
                     color={"#5c5c8a"}
@@ -148,21 +147,23 @@ export default function ProfileScreen() {
         </View>
 
         {/* Message Section */}
-        <View className="w-[90%] mx-auto mt-5 border border-1 border-[#e5e7eb] rounded-2xl">
-          <View className="">
-            <TextInput
-              className="w-full px-4 bg-transparent"
-              multiline={true}
-              textAlignVertical="top"
-              placeholder="Write something..."
-            />
-            <View className="flex-row items-center px-4 py-4 justify-end">
-              <TouchableOpacity
-                className="bg-[#e5e7eb] p-2 rounded-lg"
-                activeOpacity={0.8}
-              >
-                <AntDesign className="" name="plus" />
-              </TouchableOpacity>
+        <View className="pb-24">
+          <View className="w-[90%] mx-auto mt-5 border border-1 border-[#b3b5b9] rounded-2xl">
+            <View className="">
+              <TextInput
+                className="w-full px-4 bg-transparent"
+                multiline={true}
+                textAlignVertical="top"
+                placeholder="Write something..."
+              />
+              <View className="flex-row items-center px-4 py-4 justify-end">
+                <TouchableOpacity
+                  className="bg-[#b3b5b9] p-2 rounded-lg"
+                  activeOpacity={0.8}
+                >
+                  <AntDesign className="" name="plus" />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
