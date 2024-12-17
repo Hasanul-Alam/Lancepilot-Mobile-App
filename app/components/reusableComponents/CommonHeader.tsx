@@ -52,7 +52,7 @@ export default function CommonHeader() {
   return (
     <View className="w-full mx-auto">
       <View
-        className="w-full h-[100px] border-b border-b-[#c5d1c5] rounded-b-2xl bg-[#fff] shadow-b"
+        className="w-full border-b border-b-[#c5d1c5] rounded-b-2xl bg-[#fff] shadow-b pb-4"
         style={{
           shadowColor: "#000", // Shadow color (iOS)
           shadowOffset: { width: 0, height: 2 }, // Shadow offset (iOS)
@@ -75,7 +75,7 @@ export default function CommonHeader() {
             {/* Workspace Name & Category */}
             <View>
               <Text className="text-xl">Workspace 3</Text>
-              <Text className="leading-3 text-blue-400">Main</Text>
+              <Text className="text-blue-400 -mt-1">Main</Text>
             </View>
           </View>
           <View className="flex-row items-center gap-3">

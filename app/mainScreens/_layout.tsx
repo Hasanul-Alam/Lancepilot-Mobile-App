@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import {
   Alert,
   Animated,
+  Dimensions,
+  Image,
   Modal,
   StyleSheet,
   Text,
@@ -32,8 +34,32 @@ interface TabBarProps {
   navigate: (name: RouteName) => void;
 }
 
+const { width, height } = Dimensions.get("window");
+
 export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const slideAnim = useState(new Animated.Value(-width))[0];
+
+  // Sidebar Menu toggler
+  const toggleSidebar = () => {
+    if (isSidebarVisible) {
+      // Close Sidebar
+      Animated.timing(slideAnim, {
+        toValue: -width,
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => setSidebarVisible(false));
+    } else {
+      // Open Sidebar
+      setSidebarVisible(true);
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    }
+  };
 
   const handleTitle4Click = () => {
     // Trigger the popup/modal when title4 is clicked
@@ -57,18 +83,18 @@ export default function App() {
         )}
         {routeName === "title2" && (
           <AntDesign
-            name={
-              routeName === selectedTab
-                ? "message1"
-                : "message1"
-            }
+            name={routeName === selectedTab ? "message1" : "message1"}
             size={23}
             color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
           />
         )}
         {routeName === "title3" && (
           <MaterialCommunityIcons
-            name={routeName === selectedTab ? "face-man-profile" : "face-man-profile"}
+            name={
+              routeName === selectedTab
+                ? "face-man-profile"
+                : "face-man-profile"
+            }
             size={28}
             color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
           />
@@ -77,13 +103,12 @@ export default function App() {
           <Entypo
             name={routeName === selectedTab ? "menu" : "menu"}
             size={28}
-            color={routeName === selectedTab ? "#a885ff" : "#00b15e"}
+            color={routeName === selectedTab ? "#ffffff" : "#ffffff"}
           />
         )}
       </TouchableOpacity>
     );
   };
-  
 
   return (
     <>
@@ -126,7 +151,7 @@ export default function App() {
           position="RIGHT"
           component={Profile}
           options={{ headerShown: false }}
-          style={{  }}
+          style={{}}
         />
         {/* Action Button with Burger Icon (title4) */}
         <CurvedBottomBarExpo.Screen
@@ -168,6 +193,75 @@ export default function App() {
           </View>
         </View>
       </Modal>
+      <View className="absolute bottom-0 left-[20rem] p-5">
+        <TouchableOpacity onPress={toggleSidebar}>
+          <Entypo name="menu" size={28} color="green" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Sidebar Menu */}
+      {isSidebarVisible && (
+        <Animated.View
+          style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}
+          className="bg-white"
+        >
+          <View className="mt-10">
+            {/* Close Button */}
+            <View className="flex-row items-center mt-5 justify-between">
+              {/* Logo */}
+              <View className="w-[40px] h-[30px] rounded-full overflow-hidden">
+                <Image
+                  source={require("../../assets/images/logo.png")}
+                  resizeMode="cover"
+                  className="w-full h-full"
+                />
+              </View>
+              <View className="w-[25px] h-[25px] bg-red-500 rounded-full flex-row items-center justify-center">
+                <TouchableOpacity
+                  onPress={toggleSidebar} // Close the sidebar
+                  className=" w-full"
+                >
+                  <Text className="text-white font-bold w-full text-center">
+                    X
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View className="mt-7">
+              <TouchableOpacity
+                className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
+                onPress={() => alert("Menu Item 1 clicked")}
+              >
+                <View>
+                  <MaterialCommunityIcons
+                    name="view-dashboard-outline"
+                    size={20}
+                  />
+                </View>
+                <Text className="text-black text-xl">Dashboard</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className=" mt-4 rounded-lg  flex-row items-center py-2 px-3 gap-3"
+                onPress={() => alert("Menu Item 1 clicked")}
+              >
+                <View className="-mt-[4px]">
+                  <EvilIcons name="envelope" size={25} />
+                </View>
+                <Text className="text-black text-xl">Inbox</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
+                onPress={() => alert("Menu Item 1 clicked")}
+              >
+                <View>
+                  <Ionicons name="chatbubbles-outline" size={20} />
+                </View>
+                <Text className="text-black text-xl">Live Chat</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Animated.View>
+      )}
     </>
   );
 }
@@ -244,5 +338,19 @@ const styles = StyleSheet.create({
   screen2: {
     flex: 1,
     backgroundColor: "#FFEBCD",
+  },
+  sidebar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: width * 0.7, // Sidebar width should be 75% of the screen
+    // backgroundColor: "#fff", // Purple background
+    padding: 20,
+    zIndex: 10, // Ensure it stays above other content
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 5,
   },
 });
