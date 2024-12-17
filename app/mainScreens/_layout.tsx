@@ -5,6 +5,7 @@ import {
   Dimensions,
   Image,
   Modal,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,7 +21,6 @@ import {
   Entypo,
   EvilIcons,
   Feather,
-  FontAwesome,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
@@ -207,66 +207,78 @@ export default function App() {
 
       {/* Sidebar Menu */}
       {isSidebarVisible && (
-        <Animated.View
-          style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}
-          className="bg-white"
-        >
-          <View className="mt-10">
-            {/* Close Button */}
-            <View className="flex-row items-center mt-5 justify-between">
-              {/* Logo */}
-              <View className="w-[40px] h-[30px] rounded-full overflow-hidden">
-                <Image
-                  source={require("../../assets/images/logo.png")}
-                  resizeMode="cover"
-                  className="w-full h-full"
-                />
+        <>
+          {/* Semi-transparent overlay to simulate blur and capture outside taps */}
+          <Pressable
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent background
+              zIndex: 9, // Ensures it's above everything else but below the sidebar
+            }}
+            onPress={toggleSidebar} // Close sidebar when tapping outside
+          ></Pressable>
+
+          {/* Sidebar Menu */}
+          <Animated.View
+            style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}
+            className="bg-white"
+          >
+            <View className="mt-10">
+              {/* Close Button */}
+              <View className="flex-row items-center mt-5 justify-between">
+                {/* Logo */}
+                <View className="w-[40px] h-[30px] rounded-full overflow-hidden">
+                  <Image
+                    source={require("../../assets/images/logo.png")}
+                    resizeMode="cover"
+                    className="w-full h-full"
+                  />
+                </View>
+                <View className="w-[25px] h-[25px] bg-red-500 rounded-full flex-row items-center justify-center">
+                  <TouchableOpacity
+                    onPress={toggleSidebar} // Close the sidebar
+                    className=" w-full"
+                  >
+                    <Text className="text-white font-bold w-full text-center">
+                      X
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View className="w-[25px] h-[25px] bg-red-500 rounded-full flex-row items-center justify-center">
+              {/* Sidebar Items */}
+              <View className="mt-7">
                 <TouchableOpacity
-                  onPress={toggleSidebar} // Close the sidebar
-                  className=" w-full"
+                  className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
+                  onPress={() => alert("Menu Item 1 clicked")}
                 >
-                  <Text className="text-white font-bold w-full text-center">
-                    X
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View className="mt-7">
-              <TouchableOpacity
-                className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
-                onPress={() => alert("Menu Item 1 clicked")}
-              >
-                <View>
                   <MaterialCommunityIcons
                     name="view-dashboard-outline"
                     size={20}
                   />
-                </View>
-                <Text className="text-black text-xl">Dashboard</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className=" mt-4 rounded-lg  flex-row items-center py-2 px-3 gap-3"
-                onPress={() => alert("Menu Item 1 clicked")}
-              >
-                <View className="-mt-[4px]">
+                  <Text className="text-black text-xl">Dashboard</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
+                  onPress={() => alert("Menu Item 2 clicked")}
+                >
                   <EvilIcons name="envelope" size={25} />
-                </View>
-                <Text className="text-black text-xl">Inbox</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
-                onPress={() => alert("Menu Item 1 clicked")}
-              >
-                <View>
+                  <Text className="text-black text-xl">Inbox</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
+                  onPress={() => alert("Menu Item 3 clicked")}
+                >
                   <Ionicons name="chatbubbles-outline" size={20} />
-                </View>
-                <Text className="text-black text-xl">Live Chat</Text>
-              </TouchableOpacity>
+                  <Text className="text-black text-xl">Live Chat</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </Animated.View>
+          </Animated.View>
+        </>
       )}
     </>
   );
