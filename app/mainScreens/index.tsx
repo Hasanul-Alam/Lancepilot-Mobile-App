@@ -1,8 +1,10 @@
 import {
+  Button,
   Dimensions,
   ListRenderItemInfo,
   ScrollView,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import ProgressBar from "@/app/components/reusableComponents/progressBar";
@@ -16,6 +18,9 @@ import {
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { LineChart } from "react-native-chart-kit";
 import CommonHeader from "../components/reusableComponents/CommonHeader";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { decrement, increment, incrementByAmount } from "../store/slices/counterSlice";
 
 const data = [
   { id: "1", title: "Users", description: "Description for item 1" },
@@ -55,6 +60,8 @@ const backgroundColors = [
 ];
 
 export default function HomeScreen() {
+  const count = useSelector((state: RootState) => state.counter.value);
+  const dispatch = useDispatch();
   type CardItem = {
     id: string;
     title: string;
@@ -217,6 +224,13 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
+
+          <View>
+      <Text>Count: {count}</Text>
+      <Button title="Increment" onPress={() => dispatch(increment())} />
+      <TouchableOpacity className="my-5"><Button title="Decrement" onPress={() => dispatch(decrement())} /></TouchableOpacity>
+      <Button title="Add 5" onPress={() => dispatch(incrementByAmount(5))} />
+    </View>
         </ScrollView>
       </GestureHandlerRootView>
     </View>

@@ -10,10 +10,14 @@ import {
 import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import CommonHeader from "../components/reusableComponents/CommonHeader";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useNavigation, useRouter } from "expo-router";
 
 export default function Inbox() {
   const [activeButton, setActiveButton] = useState("buttonAll");
   const [searchText, setSearchText] = useState("");
+
+  const router = useRouter();
+  const navigation = useNavigation();
 
   const handleActiButton = (button: any) => {
     setActiveButton(button);
@@ -21,6 +25,11 @@ export default function Inbox() {
 
   const handleSearch = (text: any) => {
     setSearchText(text);
+  };
+
+  const handleMessageDetails = () => {
+    // navigation.navigate('chats');
+    console.log("hi there I am here.");
   };
 
   // Fake Message Data
@@ -125,162 +134,47 @@ export default function Inbox() {
             {/* Messages */}
             <View className="message-container mt-4 w-full">
               {fakeMessageData.map((message) => (
-                <View
+                <TouchableOpacity
+                  onPress={()=> navigation.navigate('chats')}
                   key={message.name}
-                  className="flex-row gap-3 items-center justify-between mt-4"
                 >
-                  <View className="flex-row items-center gap-3">
-                    {/* Inbox person image */}
-                    <View className="w-[50px] h-[50px] rounded-full overflow-hidden">
-                      <Image
-                        source={require("../../assets/images/person.jpeg")}
-                        resizeMode="cover"
-                        className="w-full h-full"
-                      />
-                    </View>
-                    {/* Inbox text */}
-                    <View>
-                      <Text className="text-lg font-semibold">
-                        {message.name}
-                      </Text>
-                      <Text className="text font-semibold -mt-1">
-                        {message.message.length > 40
-                          ? message.message.slice(0, 30) + "...."
-                          : message.message}
-                      </Text>
-                    </View>
-                  </View>
-                  {/* Message time & Pin option */}
-                  <View>
-                    <Text className="text-sm">Today 4:35 pm</Text>
-                    <View className="flex-row justify-end">
-                      {/* <SimpleLineIcons name="pin" size={14} color={"#bbbfc4"} /> */}
-                      <View className="bg-[#009fff] w-[18px] h-[18px] flex-row items-center rounded-full">
-                        <Text className="w-full text-center text-sm text-white font-semibold">
-                          2
+                  <View className="flex-row gap-3 items-center justify-between mt-4">
+                    <View className="flex-row items-center gap-3">
+                      {/* Inbox person image */}
+                      <View className="w-[50px] h-[50px] rounded-full overflow-hidden">
+                        <Image
+                          source={require("../../assets/images/person.jpeg")}
+                          resizeMode="cover"
+                          className="w-full h-full"
+                        />
+                      </View>
+                      {/* Inbox text */}
+                      <View>
+                        <Text className="text-lg font-semibold">
+                          {message.name}
+                        </Text>
+                        <Text className="text font-semibold -mt-1">
+                          {message.message.length > 40
+                            ? message.message.slice(0, 30) + "...."
+                            : message.message}
                         </Text>
                       </View>
                     </View>
+                    {/* Message time & Pin option */}
+                    <View>
+                      <Text className="text-sm">Today 4:35 pm</Text>
+                      <View className="flex-row justify-end">
+                        {/* <SimpleLineIcons name="pin" size={14} color={"#bbbfc4"} /> */}
+                        <View className="bg-[#009fff] w-[18px] h-[18px] flex-row items-center rounded-full">
+                          <Text className="w-full text-center text-sm text-white font-semibold">
+                            2
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
-              {/* Single Message */}
-              <View className="flex-row gap-3 items-center justify-between mt-4">
-                <View className="flex-row items-center gap-3">
-                  {/* Inbox person image */}
-                  <View className="w-[50px] h-[50px] rounded-full overflow-hidden">
-                    <Image
-                      source={require("../../assets/images/person.jpeg")}
-                      resizeMode="cover"
-                      className="w-full h-full"
-                    />
-                  </View>
-                  {/* Inbox text */}
-                  <View>
-                    <Text className="text-lg font-semibold">
-                      Iftekhar Ahmed
-                    </Text>
-                    <Text className="text font-semibold -mt-1">
-                      How are you today? I am fine.....
-                    </Text>
-                  </View>
-                </View>
-                {/* Message time & Pin option */}
-                <View>
-                  <Text className="text-sm">Today 4:35 pm</Text>
-                  <View className="flex-row justify-end">
-                    {/* <SimpleLineIcons name="pin" size={14} color={"#bbbfc4"} /> */}
-                    <View className="bg-[#009fff] w-[18px] h-[18px] flex-row items-center rounded-full">
-                      <Text className="w-full text-center text-sm text-white font-semibold">
-                        2
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              {/* Single Message */}
-              <View className="flex-row gap-3 items-center justify-between mt-4">
-                <View className="flex-row items-center gap-3">
-                  {/* Inbox person image */}
-                  <View className="w-[50px] h-[50px] rounded-full overflow-hidden bg-[#6d34ff] flex-row items-center justify-center">
-                    <Text className="text-white w-full text-center font-thin text-2xl">
-                      IA
-                    </Text>
-                  </View>
-                  {/* Inbox text */}
-                  <View>
-                    <Text className="text-lg font-semibold">
-                      Iftekhar Ahmed
-                    </Text>
-                    <Text className="text-sm -mt-1">
-                      How are you today? I am fine and.....
-                    </Text>
-                  </View>
-                </View>
-                {/* Message time & Pin option */}
-                <View>
-                  <Text className="text-sm">Today 4:35 pm</Text>
-                  <View className="flex-row justify-end">
-                    <SimpleLineIcons name="pin" size={14} color={"#bbbfc4"} />
-                  </View>
-                </View>
-              </View>
-
-              {/* Single Message */}
-              <View className="flex-row gap-3 items-center justify-between mt-4">
-                <View className="flex-row items-center gap-3">
-                  {/* Inbox person image */}
-                  <View className="w-[50px] h-[50px] rounded-full overflow-hidden bg-[#f59e0b] flex-row items-center justify-center">
-                    <Text className="text-white w-full text-center font-thin text-2xl">
-                      HA
-                    </Text>
-                  </View>
-                  {/* Inbox text */}
-                  <View>
-                    <Text className="text-lg font-semibold">Hasanul Alam</Text>
-                    <Text className="text-sm -mt-1">
-                      How are you today? I am fine and.....
-                    </Text>
-                  </View>
-                </View>
-                {/* Message time & Pin option */}
-                <View>
-                  <Text className="text-sm">Today 4:35 pm</Text>
-                  <View className="flex-row justify-end">
-                    <SimpleLineIcons name="pin" size={14} color={"#bbbfc4"} />
-                  </View>
-                </View>
-              </View>
-              {/* Single Message */}
-              <View className="flex-row gap-3 items-center justify-between mt-3">
-                <View className="flex-row items-center gap-3">
-                  {/* Inbox person image */}
-                  <View className="w-[50px] h-[50px] rounded-full overflow-hidden bg-[#10b981] flex-row items-center justify-center">
-                    <Text className="text-white w-full text-center font-thin text-2xl">
-                      NM
-                    </Text>
-                  </View>
-                  {/* Inbox text */}
-                  <View>
-                    <Text className="text-lg font-semibold">Nishat Molla</Text>
-                    <Text className="font-semibold -mt-1">
-                      How are you today? I am fine and.....
-                    </Text>
-                  </View>
-                </View>
-                {/* Message time & Pin option */}
-                <View>
-                  <Text className="text-sm">Today 4:35 pm</Text>
-                  <View className="flex-row justify-end">
-                    {/* <SimpleLineIcons name="pin" size={14} color={"#bbbfc4"} /> */}
-                    <View className="bg-[#009fff] w-[18px] h-[18px] flex-row items-center rounded-full">
-                      <Text className="w-full text-center text-sm text-white font-semibold">
-                        9+
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
             </View>
           </View>
         </ScrollView>
@@ -288,3 +182,7 @@ export default function Inbox() {
     </View>
   );
 }
+
+/* 
+  
+*/

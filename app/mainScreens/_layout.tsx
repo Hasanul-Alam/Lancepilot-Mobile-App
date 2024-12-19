@@ -4,7 +4,6 @@ import {
   Animated,
   Dimensions,
   Image,
-  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -16,6 +15,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import IndexScreen from "./index";
 import Inbox from "./inbox";
 import Profile from "./profile";
+import SidebarMenu from "../components/reusableComponents/SidebarMenu";
 import {
   AntDesign,
   Entypo,
@@ -23,6 +23,8 @@ import {
   Feather,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 // Define types for route names
 type RouteName = "title1" | "title2" | "title3" | "title4";
@@ -34,31 +36,21 @@ interface TabBarProps {
   navigate: (name: RouteName) => void;
 }
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const slideAnim = useState(new Animated.Value(-width))[0];
+  const theme = useSelector((state: RootState) => state.theme.theme);
 
   // Sidebar Menu toggler
   const toggleSidebar = () => {
-    if (isSidebarVisible) {
-      // Close Sidebar
-      Animated.timing(slideAnim, {
-        toValue: -width,
-        duration: 300,
-        useNativeDriver: false,
-      }).start(() => setSidebarVisible(false));
-    } else {
-      // Open Sidebar
-      setSidebarVisible(true);
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    }
+    Animated.timing(slideAnim, {
+      toValue: isSidebarVisible ? -width : 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => setSidebarVisible(!isSidebarVisible));
   };
 
   const handleTitle4Click = () => {
@@ -171,39 +163,12 @@ export default function App() {
           }}
         />
       </CurvedBottomBarExpo.Navigator>
-
-      {/* Popup Modal outside the Navigator */}
-      <Modal
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Ionicons
-              name="close"
-              size={30}
-              color="black"
-              onPress={() => setModalVisible(false)}
-            />
-            <Text>Popup Content</Text>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
       <TouchableOpacity
         onPress={toggleSidebar}
         className="absolute bottom-0 left-[20rem] py-5 px-8"
       >
         <Entypo name="menu" size={28} color="green" />
       </TouchableOpacity>
-      {/* <View className="absolute bottom-0 left-[20rem] p-5">
-        <TouchableOpacity onPress={toggleSidebar}>
-          <Entypo name="menu" size={28} color="green" />
-        </TouchableOpacity>
-      </View> */}
 
       {/* Sidebar Menu */}
       {isSidebarVisible && (
@@ -225,33 +190,11 @@ export default function App() {
           {/* Sidebar Menu */}
           <Animated.View
             style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}
-            className="bg-white"
+            className={`${theme === 'dark' ? 'bg-black' : 'bg-white' }`}
           >
-            <View className="mt-10">
-              {/* Close Button */}
-              <View className="flex-row items-center mt-5 justify-between">
-                {/* Logo */}
-                <View className="w-[40px] h-[30px] rounded-full overflow-hidden">
-                  <Image
-                    source={require("../../assets/images/logo.png")}
-                    resizeMode="cover"
-                    className="w-full h-full"
-                  />
-                </View>
-                <View className="w-[25px] h-[25px] bg-red-500 rounded-full flex-row items-center justify-center">
-                  <TouchableOpacity
-                    onPress={toggleSidebar} // Close the sidebar
-                    className=" w-full"
-                  >
-                    <Text className="text-white font-bold w-full text-center">
-                      X
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              {/* Sidebar Items */}
-              <View className="mt-7">
-                <TouchableOpacity
+            {/* Sidebar Items */}
+            <View className="mt-12">
+              {/* <TouchableOpacity
                   className=" mt-4 rounded-lg flex-row items-center py-2 px-3 gap-3"
                   onPress={() => alert("Menu Item 1 clicked")}
                 >
@@ -274,8 +217,8 @@ export default function App() {
                 >
                   <Ionicons name="chatbubbles-outline" size={20} />
                   <Text className="text-black text-xl">Live Chat</Text>
-                </TouchableOpacity>
-              </View>
+                </TouchableOpacity> */}
+              <SidebarMenu />
             </View>
           </Animated.View>
         </>

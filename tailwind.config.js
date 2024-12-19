@@ -5,6 +5,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        light: {
+          background: "#FFFFFF", // Light background color
+          text: "#000000", // Light text color
+        },
+        dark: {
+          background: "#1F1F1F", // Dark background color
+          text: "#FFFFFF", // Dark text color
+        },
         purple: {
           100: "#e9e0ff",
           200: "#c8b3ff",
