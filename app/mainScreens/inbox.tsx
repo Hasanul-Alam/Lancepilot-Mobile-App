@@ -10,7 +10,7 @@ import {
 import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import CommonHeader from "../components/reusableComponents/CommonHeader";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useNavigation, useRouter } from "expo-router";
+import { useNavigation, useRouter, Link } from "expo-router";
 
 export default function Inbox() {
   const [activeButton, setActiveButton] = useState("buttonAll");
@@ -28,8 +28,7 @@ export default function Inbox() {
   };
 
   const handleMessageDetails = () => {
-    // navigation.navigate('chats');
-    console.log("hi there I am here.");
+    // router.push('chats');
   };
 
   // Fake Message Data
@@ -134,8 +133,7 @@ export default function Inbox() {
             {/* Messages */}
             <View className="message-container mt-4 w-full">
               {fakeMessageData.map((message) => (
-                <TouchableOpacity
-                  onPress={()=> navigation.navigate('chats')}
+                <Link href={'/mainScreens/chats'}
                   key={message.name}
                 >
                   <View className="flex-row gap-3 items-center justify-between mt-4">
@@ -173,7 +171,7 @@ export default function Inbox() {
                       </View>
                     </View>
                   </View>
-                </TouchableOpacity>
+                </Link>
               ))}
             </View>
           </View>

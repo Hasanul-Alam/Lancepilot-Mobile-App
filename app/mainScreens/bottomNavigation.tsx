@@ -15,7 +15,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import IndexScreen from "./index";
 import Inbox from "./inbox";
 import Profile from "./profile";
-import userProfile from "./userProfile";
 import SidebarMenu from "../components/reusableComponents/SidebarMenu";
 import {
   AntDesign,
@@ -143,7 +142,7 @@ export default function App() {
         <CurvedBottomBarExpo.Screen
           name="title3"
           position="RIGHT"
-          component={userProfile}
+          component={Profile}
           options={{ headerShown: false }}
           style={{}}
         />

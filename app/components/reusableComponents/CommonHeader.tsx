@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   Animated,
+  Linking,
 } from "react-native";
 import { AntDesign, Octicons, MaterialIcons } from "@expo/vector-icons";
 
@@ -48,6 +49,34 @@ export default function CommonHeader() {
     outputRange: ["0deg", "90deg"], // Full rotation (0° to 360°)
   });
 
+  // Handle open url of Whatsapp for livechat
+  const handleOpenUrl = () => {
+    Linking.openURL(
+      "https://api.whatsapp.com/send/?phone=447309574692&text=Hi&type=phone_number&app_absent=0"
+    ).catch((err) => console.error("Couldn't load page", err));
+  };
+
+  const fakeWorkspaceData = [
+    {
+      id: 1,
+      name: "Workspace 1",
+      title: "Main Workspaace",
+      note: "For Coffee Business",
+    },
+    {
+      id: 2,
+      name: "Workspace 2",
+      title: "Client Workspaace",
+      note: "For White Leveling",
+    },
+    {
+      id: 3,
+      name: "Workspace 3",
+      title: "Semi Functional Workspaace",
+      note: "For Electronic Business",
+    },
+  ];
+
   return (
     <View className="w-full mx-auto">
       <View
@@ -77,18 +106,10 @@ export default function CommonHeader() {
               <Text className="text-blue-400 -mt-1">Main</Text>
             </View>
           </View>
-          <View className="flex-row items-center gap-3">
-            <View className="mx-2">
+          <View className="flex-row items-center gap-1">
+            <TouchableOpacity className="mx-2" onPress={handleOpenUrl}>
               <AntDesign name="message1" size={15} color={"#00BF63"} />
-            </View>
-            <TouchableOpacity onPress={toggleSettings} activeOpacity={0.8}>
-              <Animated.View style={{ transform: [{ rotate: rotateGear }] }}>
-                <Octicons name="gear" size={15} color={"#00BF63"} />
-              </Animated.View>
             </TouchableOpacity>
-            {/* <View className="">
-              <Octicons name="gear" size={15} color={"#00BF63"} />
-            </View> */}
             <TouchableOpacity activeOpacity={0.8} onPress={toggleMenu}>
               <Animated.View style={{ transform: [{ rotate: rotateArrow }] }}>
                 <MaterialIcons
@@ -112,76 +133,31 @@ export default function CommonHeader() {
           className="flex-1"
           onPress={toggleMenu} /* Close the menu when clicking outside */
         >
-          <View className="absolute right-4 top-20 w-40 bg-white rounded-lg shadow-lg">
-            <TouchableOpacity
-              className="p-3 border-b border-gray-200"
-              onPress={() => {
-                toggleMenu();
-                alert("Option 1 Selected");
-              }}
-            >
-              <Text className="text-gray-800">Option 1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="p-3 border-b border-gray-200"
-              onPress={() => {
-                toggleMenu();
-                alert("Option 2 Selected");
-              }}
-            >
-              <Text className="text-gray-800">Option 2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="p-3"
-              onPress={() => {
-                toggleMenu();
-                alert("Option 3 Selected");
-              }}
-            >
-              <Text className="text-gray-800">Option 3</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-
-      {/* Modal for Settings */}
-      <Modal
-        transparent={true}
-        visible={settingsVisible}
-        onRequestClose={toggleSettings}
-      >
-        <TouchableOpacity
-          className="flex-1"
-          onPress={toggleSettings} /* Close the menu when clicking outside */
-        >
-          <View className="absolute right-4 top-20 w-40 bg-white rounded-lg shadow-lg">
-            <TouchableOpacity
-              className="p-3 border-b border-gray-200"
-              onPress={() => {
-                toggleSettings();
-                alert("Option 1 Selected");
-              }}
-            >
-              <Text className="text-gray-800">Option 1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="p-3 border-b border-gray-200"
-              onPress={() => {
-                toggleSettings();
-                alert("Option 2 Selected");
-              }}
-            >
-              <Text className="text-gray-800">Option 2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="p-3"
-              onPress={() => {
-                toggleSettings();
-                alert("Option 3 Selected");
-              }}
-            >
-              <Text className="text-gray-800">Option 3</Text>
-            </TouchableOpacity>
+          <View className="absolute right-4 top-20 w-[90%] bg-white rounded-lg shadow-lg">
+            {fakeWorkspaceData.map((workspace) => (
+              <TouchableOpacity
+                key={workspace.id}
+                className="p-3 border-b border-gray-200"
+                onPress={() => {
+                  toggleMenu();
+                  alert("Option 1 Selected");
+                }}
+              >
+                <View className="flex-row items-center justify-between w-full">
+                  <Text className="text-gray-800 text-xl">
+                    {workspace.name}
+                  </Text>
+                  <View>
+                    <Text className="text-gray-500 text-sm text-right">
+                      {workspace.title}
+                    </Text>
+                    <Text className="text-gray-500 text-sm text-right">
+                      {workspace.note}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </TouchableOpacity>
       </Modal>

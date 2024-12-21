@@ -40,7 +40,8 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="mainScreens" options={{ headerShown: false }} />
-          <Stack.Screen name="chats" options={{ headerShown: false }} />
+          <Stack.Screen name="mainScreens/chats/index" options={{ headerShown: false }} />
+          {/* <Stack.Screen name="chats" options={{ headerShown: false }} /> */}
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

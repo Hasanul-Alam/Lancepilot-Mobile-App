@@ -1,12 +1,23 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
-const index = () => {
+export default function index() {
   return (
-    <View>
-      <Text>index</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>Welcome to the Chat Screen!</Text>
     </View>
-  )
+  );
 }
 
-export default index
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f9f9f9",
+  },
+  text: {
+    fontSize: 20,
+    color: "#333",
+  },
+});
