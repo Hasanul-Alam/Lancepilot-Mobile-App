@@ -13,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 
 const userProfile = () => {
-  const [selectedTimezone, setSelectedTimezone] = useState("");
+  const [selectedTimezone, setSelectedTimezone] = useState("Select");
   const [image, setImage] = useState<string | null>(null);
   const [name, setName] = useState("");
 
@@ -102,8 +102,9 @@ const userProfile = () => {
               <View>
                 <Text className="ms-1 text-2xl mb-1">Name</Text>
                 <TextInput
-                  className=" rounded-xl bg-slate-300 h-[53px]"
+                  className=" rounded-xl bg-transparent h-[53px] border border-[#b3b5b9] px-4"
                   onChangeText={handleName}
+                  placeholder="Enter Your Name"
                 />
                 <Text className="text-sm text-gray-600 ms-1">
                   Your display name
@@ -114,7 +115,7 @@ const userProfile = () => {
                   <Text className="text-sm ms-1 mb-1 text-gray-600">
                     Select your timezone
                   </Text>
-                  <View className="h-[53px] rounded-xl overflow-hidden">
+                  <View className="h-[53px] rounded-xl overflow-hidden border border-1 border-[#b3b5b9]">
                     <Picker
                       selectedValue={selectedTimezone}
                       onValueChange={(itemValue) =>
@@ -123,12 +124,13 @@ const userProfile = () => {
                       style={{
                         height: "100%",
                         width: "100%",
-                        backgroundColor: "#cad5e1",
+                        backgroundColor: "transparent",
                         transform: [{ scaleY: 1 }], // Scale the picker vertically
                         fontSize: 12,
                         paddingVertical: 0, // Remove padding to prevent text cutoff
                         borderRadius: 10,
                         color: "black",
+                        borderColor: "#b3b5b9",
                       }}
                     >
                       {timezones.map((timezone) => (

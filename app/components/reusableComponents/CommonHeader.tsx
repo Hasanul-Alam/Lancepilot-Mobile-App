@@ -8,7 +8,12 @@ import {
   Animated,
   Linking,
 } from "react-native";
-import { AntDesign, Octicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Octicons,
+  MaterialIcons,
+  Feather,
+} from "@expo/vector-icons";
 
 export default function CommonHeader() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -62,18 +67,27 @@ export default function CommonHeader() {
       name: "Workspace 1",
       title: "Main Workspaace",
       note: "For Coffee Business",
+      connectedNumber: "78365423",
+      totalUsers: 278,
+      type: "Main",
     },
     {
       id: 2,
       name: "Workspace 2",
       title: "Client Workspaace",
       note: "For White Leveling",
+      connectedNumber: "90745639",
+      totalUsers: 246,
+      type: "Main",
     },
     {
       id: 3,
       name: "Workspace 3",
       title: "Semi Functional Workspaace",
       note: "For Electronic Business",
+      connectedNumber: "45638976",
+      totalUsers: 535,
+      type: "Main",
     },
   ];
 
@@ -133,31 +147,55 @@ export default function CommonHeader() {
           className="flex-1"
           onPress={toggleMenu} /* Close the menu when clicking outside */
         >
-          <View className="absolute right-4 top-20 w-[90%] bg-white rounded-lg shadow-lg">
+          <View className="absolute right-4 top-20 w-[90%] bg-white rounded-lg shadow-2xl border border-gray-200">
             {fakeWorkspaceData.map((workspace) => (
               <TouchableOpacity
                 key={workspace.id}
-                className="p-3 border-b border-gray-200"
+                className="p-4 border-b border-gray-200"
                 onPress={() => {
                   toggleMenu();
-                  alert("Option 1 Selected");
+                  alert(`Selected: ${workspace.name}`);
                 }}
               >
                 <View className="flex-row items-center justify-between w-full">
-                  <Text className="text-gray-800 text-xl">
-                    {workspace.name}
-                  </Text>
+                  {/* Workspace Details */}
                   <View>
-                    <Text className="text-gray-500 text-sm text-right">
+                    <Text className="text-gray-800 text-lg font-semibold">
+                      {workspace.name}
+                    </Text>
+                    <Text className="text-gray-500 text-sm">
                       {workspace.title}
                     </Text>
-                    <Text className="text-gray-500 text-sm text-right">
-                      {workspace.note}
-                    </Text>
+                  </View>
+                  {/* Additional Info */}
+                  <View className="flex items-end space-y-1">
+                    <View className="flex-row items-center">
+                      <Feather name="users" size={14} color="#6a30ff" />
+                      <Text className="text-gray-600 text-sm ml-2">
+                        {workspace.totalUsers} Users
+                      </Text>
+                    </View>
+                    <View className="flex-row items-center">
+                      <Feather name="tag" size={14} color="#6a30ff" />
+                      <Text className="text-gray-600 text-sm ml-2">
+                        {workspace.type}
+                      </Text>
+                    </View>
+                    <View className="flex-row items-center">
+                      <Feather name="link" size={14} color="#6a30ff" />
+                      <Text className="text-gray-600 text-sm ml-2">
+                         {workspace.connectedNumber}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </TouchableOpacity>
             ))}
+            <View className="p-4">
+              <Text className="text-center text-gray-600 text-sm">
+                Select a workspace to proceed.
+              </Text>
+            </View>
           </View>
         </TouchableOpacity>
       </Modal>
