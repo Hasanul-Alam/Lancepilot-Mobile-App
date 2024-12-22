@@ -14,6 +14,7 @@ import { CurvedBottomBarExpo } from "react-native-curved-bottom-bar";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import IndexScreen from "./index";
 import Inbox from "./inbox";
+import Chat from "./chats/index";
 import Profile from "./profile";
 import userProfile from "./userProfile";
 import SidebarMenu from "../components/reusableComponents/SidebarMenu";
@@ -137,7 +138,7 @@ export default function App() {
         <CurvedBottomBarExpo.Screen
           name="title2"
           position="LEFT"
-          component={Inbox}
+          component={Chat}
           options={{ headerShown: false }}
         />
         <CurvedBottomBarExpo.Screen
@@ -159,7 +160,7 @@ export default function App() {
               <TouchableOpacity
                 onPress={handleTitle4Click} // Handle click to show popup
               >
-                <Ionicons name="menu" color="#000000" size={25} />
+                <Ionicons name="menu" color="#1a9e4b" size={25} />
               </TouchableOpacity>
             ),
           }}
@@ -169,7 +170,7 @@ export default function App() {
         onPress={toggleSidebar}
         className="absolute bottom-0 left-[20rem] py-5 px-8"
       >
-        <Entypo name="menu" size={28} color="green" />
+        <Entypo name="menu" size={28} color="#1a9e4b" />
       </TouchableOpacity>
 
       {/* Sidebar Menu */}

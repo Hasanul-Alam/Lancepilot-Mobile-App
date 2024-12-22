@@ -7,6 +7,7 @@ import {
   Modal,
   Animated,
   Linking,
+  Touchable,
 } from "react-native";
 import {
   AntDesign,
@@ -14,6 +15,7 @@ import {
   MaterialIcons,
   Feather,
   FontAwesome,
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
 export default function CommonHeader() {
@@ -27,7 +29,7 @@ export default function CommonHeader() {
     // Animate rotation
     Animated.timing(rotationAnim, {
       toValue: menuVisible ? 0 : 1, // 0 for down, 1 for up
-      duration: 200, // Animation duration
+      duration: 110, // Animation duration
       useNativeDriver: true,
     }).start();
   };
@@ -110,21 +112,23 @@ export default function CommonHeader() {
         }}
       >
         <View className="flex-row w-[90%] mx-auto justify-between items-center mt-16">
-          <View className="flex-row items-center gap-2">
-            {/* Logo */}
-            <View className="w-[30px] h-[30px] rounded-full overflow-hidden">
-              <Image
-                source={require("../../../assets/images/workspaceLogo.jpg")}
-                resizeMode="cover"
-                className="w-full h-full"
-              />
+          <TouchableOpacity activeOpacity={0.8} onPress={toggleMenu} className="w-[18rem]">
+            <View className="flex-row items-center gap-2">
+              {/* Logo */}
+              <View className="w-[30px] h-[30px] rounded-full overflow-hidden">
+                <Image
+                  source={require("../../../assets/images/workspaceLogo.jpg")}
+                  resizeMode="cover"
+                  className="w-full h-full"
+                />
+              </View>
+              {/* Workspace Name & Category */}
+              <View>
+                <Text className="text-xl">Workspace 3</Text>
+                <Text className="text-blue-400 -mt-1">Main</Text>
+              </View>
             </View>
-            {/* Workspace Name & Category */}
-            <View>
-              <Text className="text-xl">Workspace 3</Text>
-              <Text className="text-blue-400 -mt-1">Main</Text>
-            </View>
-          </View>
+          </TouchableOpacity>
           <View className="flex-row items-center gap-1">
             <TouchableOpacity className="mx-2" onPress={handleOpenUrl}>
               <AntDesign name="message1" size={15} color={"#00BF63"} />
@@ -166,7 +170,7 @@ export default function CommonHeader() {
                   {/* Workspace Details */}
                   <View className="flex-row gap-2 items-center">
                     {/* Workspace Image */}
-                    <View className="w-[34px] h-[34px] rounded-lg overflow-hidden">
+                    <View className="w-[35px] h-[35px] rounded-lg overflow-hidden">
                       <Image
                         source={require("../../../assets/images/workspaceLogo.jpg")}
                         resizeMode="cover"
@@ -178,15 +182,27 @@ export default function CommonHeader() {
                       <Text className="text-gray-800 text-lg font-semibold">
                         {workspace.name}
                       </Text>
-                      <Text
-                        className={`${
-                          workspace.title === "Internal"
-                            ? "text-green-600"
-                            : "text-amber-500"
-                        } text-sm`}
-                      >
-                        {workspace.title}
-                      </Text>
+                      <View className="flex-row items-center gap-1 bg-red-40">
+                        {workspace.title === "Internal" ? (
+                          <MaterialIcons name="shield" color={"#00BF63"} />
+                        ) : (
+                          <MaterialCommunityIcons
+                            name="face-agent"
+                            color={"#f59e0b"}
+                            size={12}
+                          />
+                        )}
+
+                        <Text
+                          className={`${
+                            workspace.title === "Internal"
+                              ? "text-green-600"
+                              : "text-amber-500"
+                          } text-sm leading-3 mt-[2px]`}
+                        >
+                          {workspace.title}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                   {/* Additional Info */}
@@ -209,7 +225,7 @@ export default function CommonHeader() {
             ))}
             <View className="p-4">
               <Text className="text-center text-gray-600 text-sm">
-                Select a workspace to proceed.
+                Select a workspace to switch.
               </Text>
             </View>
           </View>
