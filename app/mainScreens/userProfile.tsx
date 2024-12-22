@@ -62,7 +62,7 @@ const userProfile = () => {
     <>
       <SafeAreaView className="flex-1 py-3">
         <GestureHandlerRootView>
-          <ScrollView>
+          <ScrollView className="">
             <View className="w-[95%] mx-auto">
               <Text className="text-3xl">Account Settings</Text>
               <Text className="text-gray-600">
@@ -71,47 +71,53 @@ const userProfile = () => {
             </View>
             <View className="w-full h-[1px] bg-slate-300 mt-5"></View>
             <View className="w-[95%] mx-auto">
-              <View className="w-[64px] h-[64px] bg-blue-400 rounded-lg mt-5 flex-row items-center justify-center overflow-hidden">
-                {/* Need to add a condition here. */}
-                {/* <Text className="w-full text-center text-white text-3xl">HA</Text> */}
-                {image ? (
-                  <Image
-                    source={{ uri: image }}
-                    resizeMode="cover"
-                    className="w-full h-full"
-                  />
-                ) : (
-                  <Text className="text-white font-semibold text-3xl">HA</Text>
-                )}
-              </View>
-              {/* Change Avatar Button Here */}
-              <View className="my-5">
-                <TouchableOpacity
-                  className="flex-row items-center gap-2 w-[80px] bg-[#6a30ff] justify-center py-1 rounded-lg"
-                  activeOpacity={0.8}
-                  onPress={pickImage}
-                >
-                  <Feather name="upload" color={"white"} size={13} />
-                  <Text className="text-white text-lg">Avatar</Text>
-                </TouchableOpacity>
-                <Text className="text-gray-600 text-xs mt-1">
-                  The size of the avatar should be (64 X 64) px
-                </Text>
+              <View className="flex-row gap-2 justify-between px-8 bg-white mt-5 py-4 rounded-xl items-center">
+                <View className="w-[64px] h-[64px] bg-blue-400 rounded-lg flex-row items-center justify-center overflow-hidden">
+                  {/* Need to add a condition here. */}
+                  {/* <Text className="w-full text-center text-white text-3xl">HA</Text> */}
+                  {image ? (
+                    <Image
+                      source={{ uri: image }}
+                      resizeMode="cover"
+                      className="w-full h-full"
+                    />
+                  ) : (
+                    <Text className="text-white font-semibold text-3xl">
+                      HA
+                    </Text>
+                  )}
+                </View>
+                {/* Change Avatar Button Here */}
+                <View className="my-5">
+                  <TouchableOpacity
+                    className="flex-row items-center gap-2 w-[150px] bg-[#6a30ff] justify-center py-1 rounded-lg"
+                    activeOpacity={0.8}
+                    onPress={pickImage}
+                  >
+                    <Feather name="upload" color={"white"} size={13} />
+                    <Text className="text-white text-lg">Update Avatar</Text>
+                  </TouchableOpacity>
+                  <Text className="text-gray-600 text-xs mt-1 text-center">
+                    Avatar should be (64 X 64) px
+                  </Text>
+                </View>
               </View>
 
               <View>
-                <Text className="ms-1 text-2xl mb-1">Name</Text>
-                <TextInput
-                  className=" rounded-xl bg-transparent h-[53px] border border-[#b3b5b9] px-4"
-                  onChangeText={handleName}
-                  placeholder="Enter Your Name"
-                />
-                <Text className="text-sm text-gray-600 ms-1">
-                  Your display name
-                </Text>
+                <View className="bg-white mt-5 px-3 py-3 rounded-xl">
+                  <Text className="ms-1 text-2xl mb-1">Name</Text>
+                  <TextInput
+                    className=" rounded-xl bg-transparent h-[53px] border border-[#b3b5b9] px-4"
+                    onChangeText={handleName}
+                    placeholder="Enter Your Name"
+                  />
+                  <Text className="text-sm text-gray-600 ms-1">
+                    Your display name
+                  </Text>
+                </View>
 
-                <Text className="text-2xl mt-5 ms-1">Timezone</Text>
-                <View>
+                <View className="bg-white px-3 py-5  rounded-xl mt-5">
+                  <Text className="text-2xl ms-1">Timezone</Text>
                   <Text className="text-sm ms-1 mb-1 text-gray-600">
                     Select your timezone
                   </Text>
@@ -142,17 +148,17 @@ const userProfile = () => {
                       ))}
                     </Picker>
                   </View>
-                  <View className="mt-10">
-                    <TouchableOpacity
-                      className="bg-[#6a30ff] w-[180px] px-1 py-2 flex-row items-center rounded-lg"
-                      activeOpacity={0.8}
-                      onPress={handleSubmission}
-                    >
-                      <Text className="w-full text-center text-white text-lg">
-                        Update Account Settings
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                </View>
+                <View className="mt-10 flex-row justify-center mb-32">
+                  <TouchableOpacity
+                    className="bg-[#6a30ff] w-[80%] px-1 py-2 flex-row items-center rounded-lg"
+                    activeOpacity={0.8}
+                    onPress={handleSubmission}
+                  >
+                    <Text className="w-full text-center text-white text-lg">
+                      Update Account Settings
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

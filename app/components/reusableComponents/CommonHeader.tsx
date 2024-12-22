@@ -13,6 +13,7 @@ import {
   Octicons,
   MaterialIcons,
   Feather,
+  FontAwesome,
 } from "@expo/vector-icons";
 
 export default function CommonHeader() {
@@ -65,29 +66,33 @@ export default function CommonHeader() {
     {
       id: 1,
       name: "Workspace 1",
-      title: "Main Workspaace",
+      title: "Internal",
       note: "For Coffee Business",
       connectedNumber: "78365423",
       totalUsers: 278,
       type: "Main",
+      image: "https://i.ibb.co.com/7k0MmzF/gettyimages-1308416574-612x612.jpg",
     },
     {
       id: 2,
       name: "Workspace 2",
-      title: "Client Workspaace",
+      title: "Partner",
       note: "For White Leveling",
       connectedNumber: "90745639",
       totalUsers: 246,
       type: "Main",
+      image:
+        "https://i.ibb.co.com/DtsmqH2/360-F-259623361-Ufbgl-P4u-Hkp-XQjj7-Mv-NJOe-X09y-L0-Zhrt.jpg",
     },
     {
       id: 3,
       name: "Workspace 3",
-      title: "Semi Functional Workspaace",
+      title: "Internal",
       note: "For Electronic Business",
       connectedNumber: "45638976",
       totalUsers: 535,
       type: "Main",
+      image: "https://i.ibb.co.com/7k0MmzF/gettyimages-1308416574-612x612.jpg",
     },
   ];
 
@@ -159,32 +164,43 @@ export default function CommonHeader() {
               >
                 <View className="flex-row items-center justify-between w-full">
                   {/* Workspace Details */}
-                  <View>
-                    <Text className="text-gray-800 text-lg font-semibold">
-                      {workspace.name}
-                    </Text>
-                    <Text className="text-gray-500 text-sm">
-                      {workspace.title}
-                    </Text>
+                  <View className="flex-row gap-2 items-center">
+                    {/* Workspace Image */}
+                    <View className="w-[34px] h-[34px] rounded-lg overflow-hidden">
+                      <Image
+                        source={require("../../../assets/images/workspaceLogo.jpg")}
+                        resizeMode="cover"
+                        className="w-full h-full"
+                      />
+                    </View>
+                    {/* Workspace Name & Title */}
+                    <View>
+                      <Text className="text-gray-800 text-lg font-semibold">
+                        {workspace.name}
+                      </Text>
+                      <Text
+                        className={`${
+                          workspace.title === "Internal"
+                            ? "text-green-600"
+                            : "text-amber-500"
+                        } text-sm`}
+                      >
+                        {workspace.title}
+                      </Text>
+                    </View>
                   </View>
                   {/* Additional Info */}
                   <View className="flex items-end space-y-1">
                     <View className="flex-row items-center">
-                      <Feather name="users" size={14} color="#6a30ff" />
+                      <Feather name="users" size={14} color="#0099ff" />
                       <Text className="text-gray-600 text-sm ml-2">
                         {workspace.totalUsers} Users
                       </Text>
                     </View>
                     <View className="flex-row items-center">
-                      <Feather name="tag" size={14} color="#6a30ff" />
+                      <FontAwesome name="whatsapp" size={14} color="#59ce72" />
                       <Text className="text-gray-600 text-sm ml-2">
-                        {workspace.type}
-                      </Text>
-                    </View>
-                    <View className="flex-row items-center">
-                      <Feather name="link" size={14} color="#6a30ff" />
-                      <Text className="text-gray-600 text-sm ml-2">
-                         {workspace.connectedNumber}
+                        {workspace.connectedNumber}
                       </Text>
                     </View>
                   </View>
