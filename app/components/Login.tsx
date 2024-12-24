@@ -24,6 +24,8 @@ import {
   
     //   Handle Login Function
     const handleLogin = () => {
+
+      // Client side validation
       // if (!email || !password) {
       //   alert("Please provide both your email and password.");
       //   return;
