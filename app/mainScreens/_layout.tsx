@@ -138,7 +138,7 @@ export default function App() {
         <CurvedBottomBarExpo.Screen
           name="title2"
           position="LEFT"
-          component={Chat}
+          component={Inbox}
           options={{ headerShown: false }}
         />
         <CurvedBottomBarExpo.Screen

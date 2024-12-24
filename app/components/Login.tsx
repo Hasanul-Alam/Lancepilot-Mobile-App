@@ -42,7 +42,7 @@ import {
       // }
   
       // @ts-ignore
-      router.push("mainScreens");
+      router.push("/tabs");
     };
   
     //   Handle Password
