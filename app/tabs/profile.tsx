@@ -1,4 +1,11 @@
-import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+} from "react-native";
 import React, { useState } from "react";
 // import { View } from "react-native-safe-area-context";
 import {
@@ -11,11 +18,15 @@ import { Picker } from "@react-native-picker/picker";
 import { timezones } from "../fakeData/timezoneData";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const userProfile = () => {
   const [selectedTimezone, setSelectedTimezone] = useState("Select");
   const [image, setImage] = useState<string | null>(null);
   const [name, setName] = useState("");
+  // Get the current theme from the store
+  const theme = useSelector((state: RootState) => state.theme.theme);
 
   const showToast = () => {
     Toast.show({
@@ -60,18 +71,40 @@ const userProfile = () => {
   };
   return (
     <>
-      <View className="flex-1 py-5 mt-8">
+      <View
+        className={`flex-1 py-5 ${
+          theme === "dark" ? "bg-[#060b12]" : "bg-transparent"
+        }`}
+      >
         <GestureHandlerRootView>
-          <ScrollView className="">
+          <ScrollView className="mt-6">
             <View className="w-[95%] mx-auto">
-              <Text className="text-3xl">Account Settings</Text>
-              <Text className="text-gray-600">
+              <Text
+                className={`text-3xl ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Account Settings
+              </Text>
+              <Text
+                className={`text-gray-600 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
                 Update your account, avater, credentials etc.
               </Text>
             </View>
-            <View className="w-full h-[1px] bg-slate-300 mt-5"></View>
+            <View
+              className={`w-full h-[1px] mt-5 ${
+                theme === "dark" ? "bg-slate-700" : "bg-slate-300"
+              }`}
+            ></View>
             <View className="w-[95%] mx-auto">
-              <View className="flex-row gap-2 justify-between px-8 bg-white mt-5 py-4 rounded-xl items-center">
+              <View
+                className={`flex-row gap-2 justify-between px-8 mt-5 py-4 rounded-xl items-center ${
+                  theme === "dark" ? "bg-[#1a1926]" : "bg-white"
+                }`}
+              >
                 <View className="w-[64px] h-[64px] bg-blue-400 rounded-lg flex-row items-center justify-center overflow-hidden">
                   {/* Need to add a condition here. */}
                   {/* <Text className="w-full text-center text-white text-3xl">HA</Text> */}
@@ -97,28 +130,61 @@ const userProfile = () => {
                     <Feather name="upload" color={"white"} size={13} />
                     <Text className="text-white text-lg">Update Avatar</Text>
                   </TouchableOpacity>
-                  <Text className="text-gray-600 text-xs mt-1 text-center">
+                  <Text
+                    className={`text-xs mt-1 text-center ${
+                      theme === "dark" ? "text-[#bbb5b5]" : "text-black"
+                    }`}
+                  >
                     Avatar should be (64 X 64) px
                   </Text>
                 </View>
               </View>
 
               <View>
-                <View className="bg-white mt-5 px-3 py-3 rounded-xl">
-                  <Text className="ms-1 text-2xl mb-1">Name</Text>
+                <View
+                  className={`mt-5 px-3 py-3 rounded-xl ${
+                    theme === "dark" ? "bg-[#1a1926]" : "bg-white"
+                  }`}
+                >
+                  <Text
+                    className={`ms-1 text-2xl mb-1 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Name
+                  </Text>
                   <TextInput
-                    className=" rounded-xl bg-transparent h-[53px] border border-[#b3b5b9] px-4"
+                    className="rounded-xl bg-transparent h-[53px] border border-[#b3b5b9] px-4"
                     onChangeText={handleName}
                     placeholder="Enter Your Name"
+                    placeholderTextColor={theme === "dark" ? "#fff" : "#000"}
                   />
-                  <Text className="text-sm text-gray-600 ms-1">
+                  <Text
+                    className={`text-sm text-gray-600 ms-1 ${
+                      theme === "dark" ? "text-[#bbb5b5]" : "text-black"
+                    }`}
+                  >
                     Your display name
                   </Text>
                 </View>
 
-                <View className="bg-white px-3 py-5  rounded-xl mt-5">
-                  <Text className="text-2xl ms-1">Timezone</Text>
-                  <Text className="text-sm ms-1 mb-1 text-gray-600">
+                <View
+                  className={`px-3 py-5  rounded-xl mt-5 ${
+                    theme === "dark" ? "bg-[#1a1926]" : "bg-white"
+                  }`}
+                >
+                  <Text
+                    className={`text-2xl ms-1 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Timezone
+                  </Text>
+                  <Text
+                    className={`text-sm ms-1 mb-1 text-gray-600 ${
+                      theme === "dark" ? "text-[#bbb5b5]" : "text-black"
+                    }`}
+                  >
                     Select your timezone
                   </Text>
                   <View className="h-[53px] rounded-xl overflow-hidden border border-1 border-[#b3b5b9]">
@@ -127,23 +193,25 @@ const userProfile = () => {
                       onValueChange={(itemValue) =>
                         setSelectedTimezone(itemValue)
                       }
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        backgroundColor: "transparent",
-                        transform: [{ scaleY: 1 }], // Scale the picker vertically
-                        fontSize: 12,
-                        paddingVertical: 0, // Remove padding to prevent text cutoff
-                        borderRadius: 10,
-                        color: "black",
-                        borderColor: "#b3b5b9",
-                      }}
+                      style={[
+                        styles.picker,
+                        {
+                          backgroundColor: theme === "dark" ? "#333" : "#fff",
+                          color: theme === "dark" ? "#fff" : "#000",
+                          borderColor: theme === "dark" ? "#444" : "#b3b5b9",
+                        },
+                      ]}
                     >
                       {timezones.map((timezone) => (
                         <Picker.Item
                           key={timezone.value}
                           label={timezone.label}
                           value={timezone.value}
+                          style={{
+                            backgroundColor:
+                              theme === "dark" ? "#444" : "#f9f9f9", // Custom background for each item
+                            color: theme === "dark" ? "#fff" : "#000", // Item text color
+                          }}
                         />
                       ))}
                     </Picker>
@@ -169,5 +237,21 @@ const userProfile = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  pickerContainer: {
+    width: "100%",
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+    paddingVertical: 0,
+    borderRadius: 10,
+    fontSize: 16,
+  },
+});
 
 export default userProfile;
