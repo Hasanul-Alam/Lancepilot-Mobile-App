@@ -1,10 +1,8 @@
 import {
-  Button,
   Dimensions,
   ListRenderItemInfo,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import ProgressBar from "@/app/components/reusableComponents/progressBar";
@@ -20,11 +18,6 @@ import { LineChart } from "react-native-chart-kit";
 import CommonHeader from "../components/reusableComponents/CommonHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import {
-  decrement,
-  increment,
-  incrementByAmount,
-} from "../store/slices/counterSlice";
 
 const data = [
   { id: "1", title: "Users", description: "Description for item 1" },
@@ -195,11 +188,11 @@ export default function HomeScreen() {
                 decimalPlaces: 0,
                 color: (opacity = 1) =>
                   theme === "dark"
-                    ? `rgba(255, 99, 132, ${opacity})` // Bright line for dark mode
+                    ? `rgba(195, 188, 189, ${opacity})` // Bright line for dark mode
                     : `rgba(34, 202, 236, ${opacity})`,
                 labelColor: (opacity = 1) =>
                   theme === "dark"
-                    ? `rgba(255, 255, 255, ${opacity})` // White labels for dark mode
+                    ? `rgba(195, 188, 189, ${opacity})` // White labels for dark mode
                     : `rgba(0, 0, 0, ${opacity})`,
                 style: {
                   borderRadius: 0,
@@ -266,6 +259,3 @@ export default function HomeScreen() {
   );
 }
 
-{
-  /*  */
-}
