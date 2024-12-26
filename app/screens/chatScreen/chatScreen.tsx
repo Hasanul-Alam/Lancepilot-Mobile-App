@@ -1,7 +1,18 @@
-import { View, Text, Touchable, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Touchable,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { router } from "expo-router";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ChatScreen = () => {
   // States
@@ -26,7 +37,6 @@ const ChatScreen = () => {
   };
 
   useEffect(() => {
-    // @ts-ignore
     setMessages([
       {
         _id: 1,
@@ -35,7 +45,7 @@ const ChatScreen = () => {
         user: {
           _id: 2,
           name: "React Native",
-          avatar: "https://i.ibb.co.com/7k0MmzF/gettyimages-1308416574-612x612.jpg",
+          avatar: "https://placeimg.com/140/140/any",
         },
       },
     ]);
@@ -46,39 +56,19 @@ const ChatScreen = () => {
       GiftedChat.append(previousMessages, messages)
     );
   }, []);
-
-  const chatPerson = messages.length > 0 ? messages[0].user : null;
   return (
-    <View style={styles.container}>
-      {chatPerson && (
-        <Image
-          source={{ uri: chatPerson.avatar }}
-          style={styles.avatar}
-          resizeMode="cover"
-        />
-      )}
-      <GiftedChat
-        messages={messages}
-        onSend={(messages) => onSend(messages)}
-        user={{
-          _id: 1, // Current user's ID
-        }}
-      />
-    </View>
+    <>
+      <View className="flex-1 justify-center items-center">
+        <Text>ChatScreen</Text>
+      </View>
+    </>
   );
 };
-
 const styles = StyleSheet.create({
-  container: {
+  chatContainer: {
     flex: 1,
-    backgroundColor: "#fff",
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    alignSelf: "center",
-    marginTop: 10,
+    marginTop: 0, // Remove any top margin
+    paddingTop: 0, // Remove any top padding
   },
 });
 

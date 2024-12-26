@@ -3,7 +3,7 @@ import React from 'react'
 
 const MenuScreen = () => {
   return (
-    <View>
+    <View className='flex-1 justify-center items-center bg-red-400'>
       <Text>MenuScreen</Text>
     </View>
   )

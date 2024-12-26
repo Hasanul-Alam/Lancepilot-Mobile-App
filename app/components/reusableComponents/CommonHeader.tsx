@@ -7,22 +7,28 @@ import {
   Modal,
   Animated,
   Linking,
-  Touchable,
+  StatusBar,
 } from "react-native";
 import {
   AntDesign,
-  Octicons,
   MaterialIcons,
   Feather,
   FontAwesome,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { toggleTheme } from "../../store/slices/themeSlice";
 
 export default function CommonHeader() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [settingsVisible, setSettingsVisible] = useState(false);
   const rotationAnim = useRef(new Animated.Value(0)).current;
   const gearRotationAnim = useRef(new Animated.Value(0)).current;
+
+  // Get the current theme from the store
+  const theme = useSelector((state: RootState) => state.theme.theme);
+  const dispatch = useDispatch();
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -99,20 +105,34 @@ export default function CommonHeader() {
   ];
 
   return (
-    <View className="w-full mx-auto">
+    <View
+      className={`w-full mx-auto ${
+        theme === "dark" ? "bg-[#060b12]" : "bg-white"
+      }`}
+    >
+      <StatusBar
+        barStyle={theme === "dark" ? "light-content" : "dark-content"} // Background color for the status bar
+      />
       <View
-        className="w-full border-b border-b-[#c5d1c5] rounded-b-2xl bg-[#fff] shadow-b pb-4"
+        className={`w-full border ${
+          theme === "dark" ? "border-[#15202f]" : "border-[#fff]"
+        } rounded-b-2xl shadow-b shadow-[#15202f] pb-4 ${
+          theme === "dark" ? "bg-[#060b12]" : "bg-white"
+        }`}
         style={{
           shadowColor: "#000", // Shadow color (iOS)
           shadowOffset: { width: 0, height: 2 }, // Shadow offset (iOS)
           shadowOpacity: 0.25, // Shadow opacity (iOS)
           shadowRadius: 4, // Shadow radius (iOS)
-          elevation: 5,
-          // Shadow for Android
+          elevation: 5, // Shadow elevation (Android)
         }}
       >
         <View className="flex-row w-[90%] mx-auto justify-between items-center mt-16">
-          <TouchableOpacity activeOpacity={0.8} onPress={toggleMenu} className="w-[18rem]">
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={toggleMenu}
+            className="w-[18rem]"
+          >
             <View className="flex-row items-center gap-2">
               {/* Logo */}
               <View className="w-[30px] h-[30px] rounded-full overflow-hidden">
@@ -124,13 +144,37 @@ export default function CommonHeader() {
               </View>
               {/* Workspace Name & Category */}
               <View>
-                <Text className="text-xl">Workspace 3</Text>
+                <Text
+                  className={`"text-xl" ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  Workspace 3
+                </Text>
                 <Text className="text-blue-400 -mt-1">Main</Text>
               </View>
             </View>
           </TouchableOpacity>
           <View className="flex-row items-center gap-1">
-            <TouchableOpacity className="mx-2" onPress={handleOpenUrl}>
+            {/* Toggle Theme */}
+            <TouchableOpacity
+              onPress={() => dispatch(toggleTheme())}
+              activeOpacity={0.8}
+            >
+              {theme === "dark" ? (
+                <Feather name="sun" size={18} color={"#00BF63"} />
+              ) : (
+                <Feather name="moon" size={18} color={"#00BF63"} />
+              )}
+            </TouchableOpacity>
+            {/* <TouchableOpacity
+              className=""
+              onPress={toggleSettings}
+              activeOpacity={0.8}
+            >
+              <Octicons name="gear" size={15} color={"#00BF63"} />
+            </TouchableOpacity> */}
+            <TouchableOpacity className="ms-2 mx-1" onPress={handleOpenUrl}>
               <AntDesign name="message1" size={15} color={"#00BF63"} />
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8} onPress={toggleMenu}>
@@ -228,6 +272,24 @@ export default function CommonHeader() {
                 Select a workspace to switch.
               </Text>
             </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Modal For Settings Popup */}
+      <Modal
+        transparent={true}
+        visible={settingsVisible}
+        onRequestClose={toggleSettings}
+      >
+        <TouchableOpacity
+          className="flex-1"
+          onPress={toggleSettings} /* Close the menu when clicking outside */
+        >
+          <View className="absolute right-4 top-20 w-[80%] mx-auto bg-white rounded-lg shadow-2xl border border-gray-200">
+            <TouchableOpacity className="mx-5 my-3">
+              <Text>Hi</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </Modal>

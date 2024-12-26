@@ -1,6 +1,5 @@
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
   GestureHandlerRootView,
   ScrollView,
@@ -60,7 +59,7 @@ const userProfile = () => {
   };
   return (
     <>
-      <SafeAreaView className="flex-1 py-3">
+      <View className="flex-1 py-3">
         <GestureHandlerRootView>
           <ScrollView className="">
             <View className="w-[95%] mx-auto">
@@ -165,7 +164,7 @@ const userProfile = () => {
           </ScrollView>
         </GestureHandlerRootView>
         <Toast />
-      </SafeAreaView>
+      </View>
     </>
   );
 };
