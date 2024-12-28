@@ -12,6 +12,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { router } from "expo-router";
 import {
   Entypo,
+  Feather,
   Fontisto,
   Ionicons,
   MaterialCommunityIcons,
@@ -29,6 +30,8 @@ const ChatScreen = () => {
   // States
   const [messages, setMessages] = useState<Message[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [message, setMessage] = useState("");
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -39,6 +42,16 @@ const ChatScreen = () => {
   };
   const handleBack = () => {
     router.back();
+  };
+
+  // Handle Message Text
+  const handleMessage = (text: any) => {
+    setMessage(text);
+  };
+
+  const handleSendMessage = () => {
+    console.log(message);
+    setMessage("");
   };
 
   const handlePickDocument = async () => {
@@ -168,17 +181,33 @@ const ChatScreen = () => {
                 />
               </TouchableOpacity>
               <TextInput
+                value={message}
+                onChangeText={handleMessage}
                 className="flex-1 bg-transparent max-h-16"
                 placeholder="Type a message..."
                 multiline={true}
                 maxLength={200}
               />
-              <Entypo
-                name="plus"
-                size={25}
-                className="ml-2"
-                color={"#484848"}
-              />
+              {message.length > 0 ? (
+                <TouchableOpacity
+                  onPress={handleSendMessage}
+                  activeOpacity={0.8}
+                >
+                  <Feather
+                    name="send"
+                    size={22}
+                    className="mr-2"
+                    color={"#484848"}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <Entypo
+                  name="plus"
+                  size={22}
+                  className="mr-2"
+                  color={"#484848"}
+                />
+              )}
             </View>
             <View className="ml-4">
               <MaterialCommunityIcons
