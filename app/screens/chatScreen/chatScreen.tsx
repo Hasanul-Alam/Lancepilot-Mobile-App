@@ -7,11 +7,15 @@ import {
   Dimensions,
   Modal,
   TouchableWithoutFeedback,
+  Animated,
+  Touchable,
 } from "react-native";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { router } from "expo-router";
 import {
+  AntDesign,
   Entypo,
+  EvilIcons,
   Feather,
   Fontisto,
   Ionicons,
@@ -23,15 +27,27 @@ import {
   TextInput,
 } from "react-native-gesture-handler";
 
+import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
+import * as Location from "expo-location";
+import * as Contacts from "expo-contacts";
 import { Alert } from "react-native";
 
 const ChatScreen = () => {
   // States
-  const [messages, setMessages] = useState<Message[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [timer, setTimer] = useState(0);
   const [message, setMessage] = useState("");
+  const [timer, setTimer] = useState(0); // Keeps track of elapsed seconds
+  const [isRunning, setIsRunning] = useState(false); // Checks if the timer is active
+  const [addPopup, setAddPopup] = useState(false);
+  const [contacts, setContacts] = useState<Contacts.Contact[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [progress] = useState(new Animated.Value(0));
+  const rotationAnim = useRef(new Animated.Value(0)).current;
+
+  // Location and contacts state
+  const [locationPermission, setLocationPermission] = useState(false);
+  const [contactPermission, setContactPermission] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -39,6 +55,39 @@ const ChatScreen = () => {
   const handleViewProfile = () => {
     console.log("hello from view profile.");
     router.push("/screens/chatProfile/chatProfile");
+  };
+
+  const togglePopup = () => {
+    setAddPopup(!addPopup);
+    rotateIcon();
+  };
+
+  // Rorate icon for plus button
+  const rotateIcon = () => {
+    // Rotate the icon 90 degrees or back to 0 degrees on every press
+    Animated.timing(rotationAnim, {
+      toValue: addPopup ? 0 : 1, // 0 for down, 1 for up
+      duration: 110, // Animation duration
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const rotatePlusIcon = rotationAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "90deg"], // Rotate from 0 to 180 degrees
+  });
+
+  const startTimer = () => {
+    if (isRunning) return; // Prevent starting the timer again if it's already running
+    setTimer(0); // Reset timer to 0 when starting
+    setIsRunning(true); // Start the timer
+
+    // Animate progress from 0 to 1 over 10 seconds
+    Animated.timing(progress, {
+      toValue: 1,
+      duration: 10000,
+      useNativeDriver: false,
+    }).start();
   };
   const handleBack = () => {
     router.back();
@@ -54,62 +103,145 @@ const ChatScreen = () => {
     setMessage("");
   };
 
-  const handlePickDocument = async () => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "application/pdf", // Filter for PDFs only
-        copyToCacheDirectory: true,
-      });
-
-      // Check if the user selected a document or canceled
-      if (result.canceled) {
-        console.log("User canceled the picker");
-        return;
-      }
-
-      // Handle the selected document
-      const { name, size, uri } = result.assets[0]; // Access selected document details
-      console.log("Selected document:", result.assets[0]);
-      Alert.alert(
-        "Document Selected",
-        `Name: ${name}\nSize: ${size} bytes\nURI: ${uri}`
-      );
-    } catch (err) {
-      console.error("Error picking document:", err);
-      Alert.alert("Error", "Something went wrong while picking the document.");
+  const handleImagePick = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "images",
+      allowsEditing: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      Alert.alert("Image Selected", result.assets[0].uri);
     }
   };
 
-  type Message = {
-    _id: number;
-    text: string;
-    createdAt: Date;
-    user: {
-      _id: number;
-      name: string;
-      avatar: string;
-    };
+  const handleVideoPick = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "videos",
+      allowsEditing: false,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      Alert.alert("Video Selected", result.assets[0].uri);
+    }
   };
 
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: "Hello developer",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "React Native",
-          avatar: "https://placeimg.com/140/140/any",
-        },
-      },
-    ]);
-  }, []);
+  const handleDocumentPick = async () => {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: "application/pdf",
+    });
+    if ("type" in result && result.type === "success") {
+      const successResult =
+        result as DocumentPicker.DocumentPickerSuccessResult;
+      Alert.alert("Document Selected");
+    }
+  };
 
-  const averageCharWidth = 10;
+  const handleLocationPermission = async () => {
+    // Request location permission only when button is pressed
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === "granted") {
+      setLocationPermission(true);
+      Alert.alert("Location Permission Granted");
+      handleLocation(); // Call the location function after permission is granted
+    } else {
+      setLocationPermission(false);
+      Alert.alert("Location Permission Denied");
+    }
+  };
 
-  const screenWidth = Dimensions.get("window").width;
-  const maxLength = Math.floor((screenWidth * 0.9) / averageCharWidth);
+  const handleLocation = async () => {
+    if (locationPermission) {
+      const location = await Location.getCurrentPositionAsync();
+      Alert.alert(
+        "Location",
+        `Latitude: ${location.coords.latitude}, Longitude: ${location.coords.longitude}`
+      );
+    } else {
+      Alert.alert("Permission Denied", "Location permission is required.");
+    }
+  };
+
+  // Request permission to access contacts
+  const requestContactPermission = async () => {
+    const { status } = await Contacts.requestPermissionsAsync();
+    setContactPermission(status === "granted");
+
+    if (status === "granted") {
+      loadContacts();
+    } else {
+      Alert.alert("Permission Denied", "Contacts permission is required.");
+    }
+  };
+
+  // Load contacts from the device
+  const loadContacts = async () => {
+    const { data } = await Contacts.getContactsAsync({
+      fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
+    });
+    setContacts(data);
+  };
+
+  // Handle contact selection
+  const handleContactSelect = (contact: Contacts.Contact) => {
+    // Share contact with the chat recipient
+    sendContactToChat(contact);
+    setIsModalVisible(false);
+  };
+
+  // Send selected contact to chat
+  const sendContactToChat = (contact: Contacts.Contact) => {
+    // Assuming you have a chat system where you can send a message
+    // Here we're just logging it, but you can integrate with your chat system
+    if (contact.phoneNumbers && contact.phoneNumbers.length > 0) {
+      Alert.alert(
+        "Contact Shared",
+        `Shared contact: ${contact.name}, Phone: ${contact.phoneNumbers[0].number}`
+      );
+    } else {
+      Alert.alert(
+        "Contact Shared",
+        `Shared contact: ${contact.name}, Phone: Not available`
+      );
+    }
+
+    // Example: Send the contact info to the chat recipient (chatRecipient is passed as prop)
+    // sendMessageToChat(chatRecipient, contact);
+  };
+
+  // const handlePickDocuments = (type: any) => {
+  //   const handleImagePick = async () => {
+  //     const result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: "images",
+  //       allowsEditing: true,
+  //       quality: 1,
+  //     });
+  //     if (!result.canceled) {
+  //       Alert.alert("Image Selected", result.assets[0].uri);
+  //     }
+  //   };
+  // };
+
+  const barColor = progress.interpolate({
+    inputRange: [0, 0.5, 1], // Map progress values to color
+    outputRange: ["#0e8040", "#ffc107", "#f44336"], // Green -> Yellow -> Red
+  });
+
+  // useEffect(() => {
+  //   const getPermissions = async () => {
+  //     // Request location permission
+  //     const { status: locationStatus } =
+  //       await Location.requestForegroundPermissionsAsync();
+
+  //     setLocationPermission(locationStatus === "granted");
+
+  //     // Request contact permission
+  //     const { status: contactStatus } =
+  //       await Contacts.requestPermissionsAsync();
+  //     setContactPermission(contactStatus === "granted");
+  //   };
+  //   getPermissions();
+  // }, []);
+
   return (
     <>
       <View className="flex-1 py-3">
@@ -142,7 +274,9 @@ const ChatScreen = () => {
               <View className="flex-row items-center gap-2">
                 {/* Time Left */}
                 <View>
-                  <Text className="text-sm">13:25</Text>
+                  <Text className="text-sm">
+                    {timer === 0 ? "0:00" : timer / 10}
+                  </Text>
                 </View>
                 {/* Search */}
                 <View>
@@ -158,7 +292,18 @@ const ChatScreen = () => {
             </View>
           </View>
           {/* Timer Bar */}
-          <View className="w-full h-[1px] bg-[#0e8040] mt-2"></View>
+          <Animated.View
+            style={[
+              styles.progressBar,
+              {
+                width: progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ["0%", "100%"], // Start at 100% width and decrease to 0%
+                }),
+                backgroundColor: barColor, // Apply the color transition
+              },
+            ]}
+          />
         </SafeAreaView>
         <GestureHandlerRootView>
           <View className="w-[85%] mx-auto absolute bottom-5 left-4 right-4 flex-row items-center border rounded-full bg-white border-[#d6d4d4] px-2">
@@ -169,17 +314,18 @@ const ChatScreen = () => {
                 className="mr-2"
                 color={"#484848"}
               />
-              <TouchableOpacity
-                onPress={handlePickDocument}
-                activeOpacity={0.8}
+              <Animated.View
+                style={{ transform: [{ rotate: rotatePlusIcon }] }}
               >
-                <Fontisto
-                  name="paperclip"
-                  size={18}
-                  className="mr-2"
-                  color={"#484848"}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity activeOpacity={0.8} onPress={togglePopup}>
+                  <Entypo
+                    name="plus"
+                    size={20}
+                    className=""
+                    color={"#484848"}
+                  />
+                </TouchableOpacity>
+              </Animated.View>
               <TextInput
                 value={message}
                 onChangeText={handleMessage}
@@ -188,26 +334,20 @@ const ChatScreen = () => {
                 multiline={true}
                 maxLength={200}
               />
-              {message.length > 0 ? (
-                <TouchableOpacity
-                  onPress={handleSendMessage}
-                  activeOpacity={0.8}
-                >
-                  <Feather
-                    name="send"
-                    size={22}
-                    className="mr-2"
-                    color={"#484848"}
-                  />
-                </TouchableOpacity>
-              ) : (
-                <Entypo
-                  name="plus"
-                  size={22}
+              <TouchableOpacity
+                onPress={() => {
+                  handleSendMessage();
+                }}
+                activeOpacity={0.8}
+              >
+                <Feather
+                  name="send"
+                  size={20}
                   className="mr-2"
-                  color={"#484848"}
+                  color={message.length === 0 ? "#d6d4d4" : "#484848"}
+                  disabled={message.length === 0 ? true : false}
                 />
-              )}
+              </TouchableOpacity>
             </View>
             <View className="ml-4">
               <MaterialCommunityIcons
@@ -268,6 +408,67 @@ const ChatScreen = () => {
           </View>
         </TouchableOpacity>
       </Modal>
+
+      {/* Plus popup */}
+      <Modal transparent={true} visible={addPopup} onRequestClose={togglePopup}>
+        <TouchableOpacity
+          className="flex-1"
+          onPress={togglePopup} /* Close the menu when clicking outside */
+        >
+          <View className="absolute left-4 bottom-20 w-[90%] bg-white rounded-lg shadow-2xl border border-gray-200">
+            <TouchableOpacity>
+              <View className="w-full px-3 py-3">
+                <View className="flex-row flex-wrap gap-3 grid-flow-col">
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    className="mt-2 py-1 w-[22%] bg-[#6B8E23] rounded flex-col items-center justify-center"
+                    onPress={handleImagePick}
+                  >
+                    <EvilIcons name="image" size={30} color="white" />
+                    <Text className="mt-1 text-sm text-white">Image</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleVideoPick}
+                    activeOpacity={0.8}
+                    className="mt-2 py-1 w-[22%] bg-[#FFA500] rounded flex-col items-center justify-center"
+                  >
+                    <Entypo name="video" size={24} color="white" />
+                    <Text className="mt-1 text-sm text-white">Video</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleDocumentPick}
+                    activeOpacity={0.8}
+                    className="mt-2 py-1 w-[22%] bg-[#ea80fc] rounded flex-col items-center justify-center"
+                  >
+                    <Ionicons
+                      name="document-text-outline"
+                      size={24}
+                      color="white"
+                    />
+                    <Text className="mt-1 text-sm text-white">Document</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleLocationPermission}
+                    activeOpacity={0.8}
+                    className="mt-2 py-1 w-[22%] bg-[#7f1032] rounded flex-col items-center justify-center"
+                  >
+                    <EvilIcons name="location" size={24} color="white" />
+                    <Text className="mt-1 text-sm text-white">Location</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={requestContactPermission}
+                    activeOpacity={0.8}
+                    className="mt-2 py-1 w-[22%] bg-[#2979ff] rounded flex-col items-center justify-center"
+                  >
+                    <AntDesign name="contacts" size={24} color="white" />
+                    <Text className="mt-1 text-sm text-white">Contact</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </>
   );
 };
@@ -276,6 +477,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 0, // Remove any top margin
     paddingTop: 0, // Remove any top padding
+  },
+  progressBar: {
+    height: 1,
+    marginTop: 15,
   },
 });
 

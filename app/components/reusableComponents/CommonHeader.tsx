@@ -58,11 +58,6 @@ export default function CommonHeader() {
     outputRange: ["0deg", "180deg"], // Rotate from 0 to 180 degrees
   });
 
-  const rotateGear = gearRotationAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "90deg"], // Full rotation (0° to 360°)
-  });
-
   // Handle open url of Whatsapp for livechat
   const handleOpenUrl = () => {
     Linking.openURL(

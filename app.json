@@ -4,6 +4,7 @@
     "slug": "lancepilot",
     "version": "1.0.0",
     "orientation": "portrait",
+    "permissions": ["CONTACTS"],
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
