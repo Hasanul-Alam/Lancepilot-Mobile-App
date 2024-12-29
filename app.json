@@ -4,7 +4,9 @@
     "slug": "lancepilot",
     "version": "1.0.0",
     "orientation": "portrait",
-    "permissions": ["CONTACTS"],
+    "permissions": [
+      "CONTACTS"
+    ],
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -16,7 +18,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.lancepilot"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +40,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5a0be889-77bf-4d8c-90cc-5eb5333b4ea4"
+      }
     }
   }
 }

@@ -4,20 +4,16 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   Modal,
-  TouchableWithoutFeedback,
   Animated,
-  Touchable,
 } from "react-native";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { router } from "expo-router";
 import {
   AntDesign,
   Entypo,
   EvilIcons,
   Feather,
-  Fontisto,
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
@@ -26,28 +22,94 @@ import {
   GestureHandlerRootView,
   TextInput,
 } from "react-native-gesture-handler";
-
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import * as Location from "expo-location";
-import * as Contacts from "expo-contacts";
 import { Alert } from "react-native";
 
+// Location related imports
+import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { Button } from "react-native";
+
 const ChatScreen = () => {
+  // Location Related Codes Here
+  const [isMapVisible, setIsMapVisible] = useState(false); // Controls map visibility
+  const [selectedLocation, setSelectedLocation] = useState<{ latitude: number; longitude: number } | null>(null); // Stores selected location
+  const [currentRegion, setCurrentRegion] = useState<{
+    latitude: number;
+    longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
+  } | null>(null); // Stores current region
+  const [loading, setLoading] = useState(false); // Loading state
+  const [locationPermissionGranted, setLocationPermissionGranted] =
+    useState(false);
+
+  // Function to open the map modal
+  const openMap = async () => {
+    // setCurrentRegion(null); // Reset current region
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Denied",
+        "Location permission is required to use this feature."
+      );
+      return;
+    }
+
+    // Check if location services are enabled
+    const isLocationEnabled = await Location.hasServicesEnabledAsync();
+    if (!isLocationEnabled) {
+      Alert.alert(
+        "Location Disabled",
+        "Please enable location services in your device settings."
+      );
+      return;
+    }
+
+    // Fetch the user's current location if permission is granted and location is enabled
+    const location = await Location.getCurrentPositionAsync({});
+    setCurrentRegion({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.002, // Smaller delta for a closer zoom
+      longitudeDelta: 0.002,
+    });
+    setIsMapVisible(true); // Show map modal after getting the location
+  };
+
+  // Function to close the map modal
+  const closeMap = () => setIsMapVisible(false);
+
+  // Function to handle map press event
+  const handleMapPress = (event:any) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setSelectedLocation({ latitude, longitude });
+  };
+
+  // Function to handle location share
+  const handleShareLocation = () => {
+    if (!selectedLocation) {
+      Alert.alert("No Location Selected", "Please pick a location on the map.");
+      return;
+    }
+
+    const { latitude, longitude } = selectedLocation;
+    console.log(selectedLocation);
+    Alert.alert(
+      "Location Selected",
+      `Latitude: ${latitude}, Longitude: ${longitude}`,
+      [{ text: "OK", onPress: closeMap }]
+    );
+  };
   // States
   const [modalVisible, setModalVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [timer, setTimer] = useState(0); // Keeps track of elapsed seconds
   const [isRunning, setIsRunning] = useState(false); // Checks if the timer is active
   const [addPopup, setAddPopup] = useState(false);
-  const [contacts, setContacts] = useState<Contacts.Contact[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [progress] = useState(new Animated.Value(0));
   const rotationAnim = useRef(new Animated.Value(0)).current;
-
-  // Location and contacts state
-  const [locationPermission, setLocationPermission] = useState(false);
-  const [contactPermission, setContactPermission] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -136,78 +198,6 @@ const ChatScreen = () => {
     }
   };
 
-  const handleLocationPermission = async () => {
-    // Request location permission only when button is pressed
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status === "granted") {
-      setLocationPermission(true);
-      Alert.alert("Location Permission Granted");
-      handleLocation(); // Call the location function after permission is granted
-    } else {
-      setLocationPermission(false);
-      Alert.alert("Location Permission Denied");
-    }
-  };
-
-  const handleLocation = async () => {
-    if (locationPermission) {
-      const location = await Location.getCurrentPositionAsync();
-      Alert.alert(
-        "Location",
-        `Latitude: ${location.coords.latitude}, Longitude: ${location.coords.longitude}`
-      );
-    } else {
-      Alert.alert("Permission Denied", "Location permission is required.");
-    }
-  };
-
-  // Request permission to access contacts
-  const requestContactPermission = async () => {
-    const { status } = await Contacts.requestPermissionsAsync();
-    setContactPermission(status === "granted");
-
-    if (status === "granted") {
-      loadContacts();
-    } else {
-      Alert.alert("Permission Denied", "Contacts permission is required.");
-    }
-  };
-
-  // Load contacts from the device
-  const loadContacts = async () => {
-    const { data } = await Contacts.getContactsAsync({
-      fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
-    });
-    setContacts(data);
-  };
-
-  // Handle contact selection
-  const handleContactSelect = (contact: Contacts.Contact) => {
-    // Share contact with the chat recipient
-    sendContactToChat(contact);
-    setIsModalVisible(false);
-  };
-
-  // Send selected contact to chat
-  const sendContactToChat = (contact: Contacts.Contact) => {
-    // Assuming you have a chat system where you can send a message
-    // Here we're just logging it, but you can integrate with your chat system
-    if (contact.phoneNumbers && contact.phoneNumbers.length > 0) {
-      Alert.alert(
-        "Contact Shared",
-        `Shared contact: ${contact.name}, Phone: ${contact.phoneNumbers[0].number}`
-      );
-    } else {
-      Alert.alert(
-        "Contact Shared",
-        `Shared contact: ${contact.name}, Phone: Not available`
-      );
-    }
-
-    // Example: Send the contact info to the chat recipient (chatRecipient is passed as prop)
-    // sendMessageToChat(chatRecipient, contact);
-  };
-
   // const handlePickDocuments = (type: any) => {
   //   const handleImagePick = async () => {
   //     const result = await ImagePicker.launchImageLibraryAsync({
@@ -226,21 +216,7 @@ const ChatScreen = () => {
     outputRange: ["#0e8040", "#ffc107", "#f44336"], // Green -> Yellow -> Red
   });
 
-  // useEffect(() => {
-  //   const getPermissions = async () => {
-  //     // Request location permission
-  //     const { status: locationStatus } =
-  //       await Location.requestForegroundPermissionsAsync();
-
-  //     setLocationPermission(locationStatus === "granted");
-
-  //     // Request contact permission
-  //     const { status: contactStatus } =
-  //       await Contacts.requestPermissionsAsync();
-  //     setContactPermission(contactStatus === "granted");
-  //   };
-  //   getPermissions();
-  // }, []);
+  const combinedValue = selectedLocation ? `${message} Location: ${selectedLocation.latitude}, ${selectedLocation.longitude}` : message;
 
   return (
     <>
@@ -327,7 +303,7 @@ const ChatScreen = () => {
                 </TouchableOpacity>
               </Animated.View>
               <TextInput
-                value={message}
+                value={combinedValue}
                 onChangeText={handleMessage}
                 className="flex-1 bg-transparent max-h-16"
                 placeholder="Type a message..."
@@ -448,15 +424,14 @@ const ChatScreen = () => {
                     <Text className="mt-1 text-sm text-white">Document</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={handleLocationPermission}
                     activeOpacity={0.8}
                     className="mt-2 py-1 w-[22%] bg-[#7f1032] rounded flex-col items-center justify-center"
+                    onPress={openMap}
                   >
                     <EvilIcons name="location" size={24} color="white" />
                     <Text className="mt-1 text-sm text-white">Location</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={requestContactPermission}
                     activeOpacity={0.8}
                     className="mt-2 py-1 w-[22%] bg-[#2979ff] rounded flex-col items-center justify-center"
                   >
@@ -468,6 +443,42 @@ const ChatScreen = () => {
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
+      </Modal>
+
+      {/* Location related modal */}
+      {/* {selectedLocation && (
+        <Text style={styles.locationText}>
+          Selected Location:{" "}
+          {`Latitude: ${selectedLocation.latitude}, Longitude: ${selectedLocation.longitude}`}
+        </Text>
+      )} */}
+
+      {/* Map Modal */}
+      <Modal visible={isMapVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+          {currentRegion ? (
+            <MapView
+              style={styles.map}
+              region={currentRegion} // Set region dynamically
+              onPress={handleMapPress}
+            >
+              {selectedLocation && (
+                <Marker
+                  coordinate={selectedLocation}
+                  title="Selected Location"
+                />
+              )}
+            </MapView>
+          ) : (
+            <View style={styles.loadingContainer}>
+              <Text>Loading Map...</Text>
+            </View>
+          )}
+          <View style={styles.buttonContainer}>
+            <Button title="Confirm Location" onPress={handleShareLocation} />
+            <Button title="Close Map" onPress={closeMap} color="red" />
+          </View>
+        </View>
       </Modal>
     </>
   );
@@ -481,6 +492,35 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 1,
     marginTop: 15,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  locationText: {
+    marginTop: 20,
+    fontSize: 16,
+    textAlign: "center",
+  },
+  modalContainer: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
+  buttonContainer: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
